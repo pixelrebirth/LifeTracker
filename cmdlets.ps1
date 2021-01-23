@@ -17,3 +17,10 @@ function Add-Tasklet {
 
     }
 }
+
+function New-TaskletDb {
+    param($Path)
+    Import-Module PSLiteDB
+    New-LiteDBDatabase -Path $Path
+    return (Test-Path $Path)
+}
