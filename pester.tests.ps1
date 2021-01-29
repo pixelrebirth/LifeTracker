@@ -3,7 +3,10 @@
 . ./cmdlets.ps1
 
 describe "LifeTrackerFunctions" {
-
+    Remove-Item ./tasklet.db -force
+    it "Should create a database for the App" {
+        New-TaskletDatabase ./tasklet.db | should be $true
+    }
 }
 
 describe "LifeTrackerClasses" {
@@ -14,16 +17,11 @@ describe "LifeTrackerClasses" {
 }
 
 describe "LifeTrackerCmdlets" {
-    Remove-Item ./tasklet.db -force
-    it "Should create a database for the App" {
-        New-TaskletDatabase ./tasklet.db | should be $true
-    }
-    
-    it "Should upload a document to DB" {
-        Add-Tasklet -Value Testing -Title "Testing Length" | Should Be "Tasklet Saved"
+    it "Add-Tasklet uploads a document to DB" {
+        Add-Tasklet -Value "Charity" -Title "Testing Length" | Should Be "Tasklet Saved"
     }
 
-    it "Should retrieve the tasklet from DB" {
-
+    it "Get-Tasklet returns all tasklets by default" {
+        (Get-Tasklet)[0].title | Should be "Testing Length"
     }
 }

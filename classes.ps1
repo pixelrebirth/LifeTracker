@@ -33,12 +33,8 @@ class Tasklet {
 
     [guid]$ParentId
     [guid]$Id
-   
-    $Config
 
     Tasklet ($title,$value) {
-        $this.config = Get-Content ./config.json | ConvertFrom-Json
-
         $this.title = $title
         $this.Value = $value
         $this.id = (new-guid).guid

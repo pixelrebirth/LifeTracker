@@ -1,28 +1,22 @@
 function Add-Tasklet {
+    [cmdletbinding()]
     Param (
-        $Title,
-        $Value
+        $Title
     )
     DynamicParam {
         . ./functions.ps1
-        . ./classes.ps1
-        
-        [Scriptblock]$ScriptBlock = {Get-TaskletValues}
-        return Get-DynamicParam -ParamName Values -ParamCode $ScriptBlock
+        [Scriptblock]$ScriptBlock = {(Get-LifeTrackerConfig).values}
+        return Get-DynamicParam -ParamName Value -ParamCode $ScriptBlock
     }
     Begin{
-        $Tasklet = [Tasklet]::new($Title,$Value)
+        $Value = $PsBoundParameters['Value']
     }
     Process {
-        
+        $Tasklet = [Tasklet]::new($Title,$Value)
     }
     End {
-        try {
-            $Tasklet.AddToDb()
-            Write-Output "Tasklet Saved"
-        } catch {
-            Write-Error "Cannot upload to Tasklet DB"
-        }
+        $Tasklet.AddToDb()
+        Write-Output "Tasklet Saved"
     }
 }
 
@@ -36,14 +30,12 @@ function New-TaskletDatabase {
     New-LiteDBDatabase -Path $Path | Out-Null
     Open-LiteDBConnection -Path $Path | Out-Null
     New-LiteDBCollection "tasklets" | Out-Null
+    Close-LiteDBConnection
+    return $True
+}
 
-    try {
-        Get-LiteDBIndex -Collection "tasklets" | Out-Null
-        Close-LiteDBConnection
-        return $True
-    }
-    catch {
-        Close-LiteDBConnection
-        return $False
-    }
+function Get-Tasklet {
+    Open-LiteDBConnection "./tasklet.db" | Out-Null
+    Find-LiteDBDocument -Collection "tasklets"
+    Close-LiteDBConnection | Out-Null
 }

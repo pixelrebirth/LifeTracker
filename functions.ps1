@@ -24,3 +24,7 @@ function Get-DynamicParam {
     }
     return $RuntimeParameterDictionary
 }
+
+function Get-LifeTrackerConfig {
+    Get-Content ./config.json | ConvertFrom-Json
+}
