@@ -21,13 +21,24 @@ class Tasklet {
         "OnComplete"    
     )]$Repeat
 
-    $Depth
+    [ValidateRange(1,5)]$Depth
+    [ValidateLength(3,40)]$Value
+    
+    [ValidateSet(
+        "New",
+        "Active",
+        "Done",
+        "Archived"        
+    )]$State
+
     [guid]$ParentId
     [guid]$Id
-    $Value
-    $State
+   
+    $Config
 
     Tasklet ($title,$value) {
+        $this.config = Get-Content ./config.json | ConvertFrom-Json
+
         $this.title = $title
         $this.Value = $value
         $this.id = (new-guid).guid
@@ -38,7 +49,11 @@ class Tasklet {
     }
 
     [void] AddToDb () {
-        #connect to db and add $this to db
+        $BSON = $this | ConvertTo-LiteDbBSON
+        
+        Open-LiteDBConnection "./tasklet.db"
+        Add-LiteDBDocument -Document $BSON -Collection "tasklets"
+        Close-LiteDBConnection
     }
 
     [void] UpdateDb ($json) {

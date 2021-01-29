@@ -14,8 +14,16 @@ describe "LifeTrackerClasses" {
 }
 
 describe "LifeTrackerCmdlets" {
+    Remove-Item ./tasklet.db -force
     it "Should create a database for the App" {
-        New-TaskletDb ./test.db | should be $true
-        Remove-Item ./test.db -force
+        New-TaskletDatabase ./tasklet.db | should be $true
+    }
+    
+    it "Should upload a document to DB" {
+        Add-Tasklet -Value Testing -Title "Testing Length" | Should Be "Tasklet Saved"
+    }
+
+    it "Should retrieve the tasklet from DB" {
+
     }
 }
