@@ -60,24 +60,24 @@ function Register-TaskletTouch {
     process {
         foreach($Index in 0..$($AllTasklets.count-1)){
             do {
-                [int]$Weight  = Read-Host "[$($Tasklet.Title)]-Weight(1-5)"
-                $PerTaskletDecrease = $Weight / $AllTasklets.count
+                $Title = $AllTasklets[$Index].Title
+                [int]$Weight  = Read-Host "[$($Title)]-Weight(1-5)"
+                $PerTaskletDecrease = $Weight / ($AllTasklets.count-1)
             }
             until (
                 $Weight -ge 0 -AND $Weight -le 5
             )
-            if ($Weight -gt 0 -OR $Weight -le 5){
-                $AllTasklets[$Index].weight += ($Weight + $PerTaskletDecrease)
+            
+            $AllTasklets[$Index].weight += ($Weight + $PerTaskletDecrease)
+            foreach($Index in 0..$($AllTasklets.count-1)){
+                $AllTasklets[$Index].weight -= $PerTaskletDecrease
             }
-        }
-        foreach($Index in 0..$($AllTasklets.count-1)){
-            $AllTasklets[$Index].weight -= $PerTaskletDecrease
         }
     }
     end {
        foreach ($Index in 0..$($AllTasklets.count-1)) {
             $AllTasklets[$Index].UpdateDb()
         }
-        "All Tasklets Registered"
+        $AllTasklets | Sort Weight -Descending
     }
 }

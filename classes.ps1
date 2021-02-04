@@ -1,6 +1,6 @@
 class Tasklet {
     [ValidateLength(5,40)]$Title
-    [int]$Weight = 50
+    [double]$Weight = 50
     $Tags
     $Value
     [guid]$_id

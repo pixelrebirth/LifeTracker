@@ -20,16 +20,18 @@ describe "LifeTrackerCmdlets" {
     }
 
     it "Add-Tasklet uploads a document to DB" {
-        Add-Tasklet -Value "Leadership" -Title "Another Tasklet" | Should Be "Tasklet Saved"
-        Add-Tasklet -Value "Creativity" -Title "Create Tasklet" | Should Be "Tasklet Saved"
+        Add-Tasklet -Value "Creativity" -Title "Create Tasklet 3" 
+        Add-Tasklet -Value "Creativity" -Title "Create Tasklet 2"
+        Add-Tasklet -Value "Creativity" -Title "Create Tasklet 1"  
+        Add-Tasklet -Value "Leadership" -Title "Another Tasklet" | Should be "Tasklet Saved"
     }
     
     it "Get-Tasklet returns all tasklets by default" {
-        (Get-Tasklet)[0].title | Should be "Create Tasklet"
+        (Get-Tasklet)[0].title | Should Match "Create Tasklet|Another Tasklet"
     }
     
-    Mock Read-Host {return "4"}
-    it "Should do <something> when Register-TaskletTouch is piped into" {
-        Register-TaskletTouch | should match "All Tasklets Registered"
+    Mock Read-Host {return "3"}
+    it "Register-TaskletTouch allocates 50 to Weight when Read-Host is 3" {
+        (Register-TaskletTouch)[0].Weight | should be "50"
     }
 }
