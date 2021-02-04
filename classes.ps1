@@ -27,9 +27,9 @@ class Tasklet {
         Close-LiteDBConnection
     }
 
-    [void] UpdateDb ($Document) {
+    [void] UpdateDb () {
         Open-LiteDBConnection "./tasklet.db"
-        $BSON = $Document | ConvertTo-LiteDbBSON | Update-LiteDBDocument -Collection "tasklets"
+        $BSON = $this | ConvertTo-LiteDbBSON | Update-LiteDBDocument -Collection "tasklets"
         Close-LiteDBConnection
     }
     

@@ -76,7 +76,8 @@ function Register-TaskletTouch {
     }
     end {
        foreach ($Index in 0..$($AllTasklets.count-1)) {
-            $AllTasklets[$Index].UpdateDb($AllTasklets[$Index])
+            $AllTasklets[$Index].UpdateDb()
         }
+        "All Tasklets Registered"
     }
 }

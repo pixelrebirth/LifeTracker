@@ -25,11 +25,11 @@ describe "LifeTrackerCmdlets" {
     }
     
     it "Get-Tasklet returns all tasklets by default" {
-        (Get-Tasklet)[0].title | Should be "Another Tasklet"
+        (Get-Tasklet)[0].title | Should be "Create Tasklet"
     }
     
     Mock Read-Host {return "4"}
     it "Should do <something> when Register-TaskletTouch is piped into" {
-        Register-TaskletTouch | should match "weight increased by 4$"
+        Register-TaskletTouch | should match "All Tasklets Registered"
     }
 }
