@@ -38,33 +38,45 @@ function New-TaskletDatabase {
 
 function Get-Tasklet {
     Import-Module PSLiteDB | Out-Null
+    $OutputArray = @()
 
     Open-LiteDBConnection "./tasklet.db" | Out-Null
-    Find-LiteDBDocument -Collection "tasklets"
+    $GetDocuments = Find-LiteDBDocument -Collection "tasklets"
     Close-LiteDBConnection | Out-Null
+    
+    foreach ($Document in $GetDocuments){
+        $OutputArray += [tasklet]::new($Document)
+    }
+
+    $OutputArray
 }
 
 function Register-TaskletTouch {
     [cmdletbinding()]
-    param(
-        [Parameter(Mandatory=$True,ValueFromPipeline=$True)]$InputObject
-    )
+    param()
     begin{
+        $AllTasklets = Get-Tasklet
     }
     process {
-        foreach ($Tasklet in $InputObject){
+        foreach($Index in 0..$($AllTasklets.count-1)){
             do {
                 [int]$Weight  = Read-Host "[$($Tasklet.Title)]-Weight(1-5)"
+                $PerTaskletDecrease = $Weight / $AllTasklets.count
             }
             until (
                 $Weight -ge 0 -AND $Weight -le 5
             )
             if ($Weight -gt 0 -OR $Weight -le 5){
-                Step-TaskletPriority -Weight $Weight -Id $Tasklet.Id
+                $AllTasklets[$Index].weight += ($Weight + $PerTaskletDecrease)
             }
+        }
+        foreach($Index in 0..$($AllTasklets.count-1)){
+            $AllTasklets[$Index].weight -= $PerTaskletDecrease
         }
     }
     end {
-
+       foreach ($Index in 0..$($AllTasklets.count-1)) {
+            $AllTasklets[$Index].UpdateDb($AllTasklets[$Index])
+        }
     }
 }

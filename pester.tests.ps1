@@ -20,15 +20,16 @@ describe "LifeTrackerCmdlets" {
     }
 
     it "Add-Tasklet uploads a document to DB" {
+        Add-Tasklet -Value "Leadership" -Title "Another Tasklet" | Should Be "Tasklet Saved"
         Add-Tasklet -Value "Creativity" -Title "Create Tasklet" | Should Be "Tasklet Saved"
     }
     
     it "Get-Tasklet returns all tasklets by default" {
-        (Get-Tasklet)[0].title | Should be "Create Tasklet"
+        (Get-Tasklet)[0].title | Should be "Another Tasklet"
     }
     
     Mock Read-Host {return "4"}
     it "Should do <something> when Register-TaskletTouch is piped into" {
-        Get-Tasklet | Register-TaskletTouch | should match "weight increased by 4$"
+        Register-TaskletTouch | should match "weight increased by 4$"
     }
 }

@@ -1,14 +1,22 @@
 class Tasklet {
     [ValidateLength(5,40)]$Title
-    $Weight
+    [int]$Weight = 50
     $Tags
     $Value
-    [guid]$Id
+    [guid]$_id
 
     Tasklet ($title,$value) {
         $this.title = $title
         $this.Value = $value
-        $this.id = (new-guid).guid
+        $this._id = (new-guid).guid
+    }
+
+    Tasklet ($Document) {
+        $this.Title = $Document.Title
+        $this._id = $Document._id
+        $this.Value = $Document.value
+        $this.Weight = $Document.Weight
+        $this.Tags = $Document.Tags
     }
 
     [void] AddToDb () {
@@ -19,12 +27,10 @@ class Tasklet {
         Close-LiteDBConnection
     }
 
-    [void] UpdateDb ($json) {
-
-    }
-
-    [void] PopulateFromDb ($id) {
-
+    [void] UpdateDb ($Document) {
+        Open-LiteDBConnection "./tasklet.db"
+        $BSON = $Document | ConvertTo-LiteDbBSON | Update-LiteDBDocument -Collection "tasklets"
+        Close-LiteDBConnection
     }
     
     [void] RemoveFromDb () {
