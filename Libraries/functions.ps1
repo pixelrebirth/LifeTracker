@@ -26,7 +26,7 @@ function Get-DynamicParam {
 }
 
 function Get-TaskletConfig {
-    Get-Content ./config.json | ConvertFrom-Json
+    Get-Content "$global:LifeTrackerModulePath/config.json" | ConvertFrom-Json
 }
 
 function Step-TaskletPriority {

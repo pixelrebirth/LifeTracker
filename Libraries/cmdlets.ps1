@@ -5,7 +5,7 @@ function Add-Tasklet {
         $Tags
     )
     DynamicParam {
-        . ./functions.ps1
+        . $global:LifeTrackerModulePath/Libraries/functions.ps1
         [Scriptblock]$ConfigValues = {(Get-TaskletConfig).values}
         return Get-DynamicParam -ParamName Value -ParamCode $ConfigValues
     }
@@ -23,8 +23,7 @@ function Add-Tasklet {
 
 function New-TaskletDatabase {
     param(
-        $Path = "./tasklet.db",
-        $Force
+        $Path = "$global:LifeTrackerModulePath\tasklet.db"
     )
     Import-Module PSLiteDB | Out-Null
     
@@ -33,14 +32,19 @@ function New-TaskletDatabase {
     New-LiteDBCollection "tasklets" | Out-Null
     Close-LiteDBConnection
     
-    return $True
+    if (Test-Path $Path){
+        return $Path
+    }
+    else {
+        return $false
+    }
 }
 
 function Get-Tasklet {
     Import-Module PSLiteDB | Out-Null
     $OutputArray = @()
 
-    Open-LiteDBConnection "./tasklet.db" | Out-Null
+    Open-LiteDBConnection "$global:LifeTrackerModulePath\tasklet.db" | Out-Null
     $GetDocuments = Find-LiteDBDocument -Collection "tasklets"
     Close-LiteDBConnection | Out-Null
     
@@ -48,7 +52,7 @@ function Get-Tasklet {
         $OutputArray += [tasklet]::new($Document)
     }
 
-    $OutputArray
+    $OutputArray | Sort Weight -Descending
 }
 
 function Register-TaskletTouch {

@@ -4,6 +4,7 @@ class Tasklet {
     $Tags
     $Value
     [guid]$_id
+    $DbPath = "$global:LifeTrackerModulePath/tasklet.db"
 
     Tasklet ($title,$value) {
         $this.title = $title
@@ -22,13 +23,13 @@ class Tasklet {
     [void] AddToDb () {
         $BSON = $this | ConvertTo-LiteDbBSON
         
-        Open-LiteDBConnection "./tasklet.db"
+        Open-LiteDBConnection $this.DbPath
         Add-LiteDBDocument -Document $BSON -Collection "tasklets"
         Close-LiteDBConnection
     }
 
     [void] UpdateDb () {
-        Open-LiteDBConnection "./tasklet.db"
+        Open-LiteDBConnection $this.DbPath
         $BSON = $this | ConvertTo-LiteDbBSON | Update-LiteDBDocument -Collection "tasklets"
         Close-LiteDBConnection
     }
