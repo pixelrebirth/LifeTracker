@@ -4,7 +4,7 @@ class Tasklet {
     $Tags
     $Value
     [guid]$_id
-    $DbPath = "$global:LifeTrackerModulePath/tasklet.db"
+    $DbPath = $global:DatabaseLocation
 
     Tasklet ($title,$value) {
         $this.title = $title

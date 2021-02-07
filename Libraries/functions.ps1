@@ -28,19 +28,3 @@ function Get-DynamicParam {
 function Get-TaskletConfig {
     Get-Content "$global:LifeTrackerModulePath/config.json" | ConvertFrom-Json
 }
-
-function Step-TaskletPriority {
-    param($weight,$id)
-
-    "$Id has weight increased by $weight"
-    # param($numbers,$index,$weight)
-
-    # $decrement = $weight / ($numbers.count-1)
-    # ($numbers | measure-object -sum).sum
-    
-    # 0..($numbers.count-1) | foreach {$numbers[$_] -= $decrement}
-    # $numbers[$index] += $decrement + $weight
-    # $numbers | sort -Descending
-    
-    # ($numbers | measure-object -sum).sum
-}

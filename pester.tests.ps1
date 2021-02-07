@@ -1,5 +1,6 @@
 describe "Local development execution" {
     $global:LifeTrackerModulePath = "."
+    $global:DatabaseLocation = "./test.db"
     
     . ./Libraries/classes.ps1
     . ./Libraries/functions.ps1
@@ -17,25 +18,28 @@ describe "Local development execution" {
     }
 
     context "LifeTrackerCmdlets" {
-        Remove-Item $global:LifeTrackerModulePath/tasklet.db -Force -ErrorAction 0
+        Remove-Item $global:DatabaseLocation -Force -ErrorAction 0
         it "Should create a database for the App" {
-            New-TaskletDatabase $global:LifeTrackerModulePath/tasklet.db | should be $true
+            New-TaskletDatabase | should be $true
         }
 
         it "Add-Tasklet uploads a document to DB" {
-            Add-Tasklet -Value "Creativity" -Title "Create Tasklet 3" 
-            Add-Tasklet -Value "Creativity" -Title "Create Tasklet 2"
-            Add-Tasklet -Value "Creativity" -Title "Create Tasklet 1"  
-            Add-Tasklet -Value "Leadership" -Title "Another Tasklet" | Should be "Tasklet Saved"
+            Add-Tasklet -Value "Leadership" -Title "Another Tasklet" -Tags "Test,123"| Should be "Tasklet Saved"
         }
         
-        it "Get-Tasklet returns all tasklets by default" {
-            (Get-Tasklet)[0].title | Should Match "Create Tasklet|Another Tasklet"
+        it "Get-Tasklet returns created tasklet" {
+            (Get-Tasklet)[0].title | Should Be "Another Tasklet"
+            (Get-Tasklet)[0].tags[0] | Should Be "Test"
         }
         
         Mock Read-Host {return "3"}
-        it "Register-TaskletTouch allocates 50 to Weight when Read-Host is 3" {
-            (Register-TaskletTouch)[0].Weight | should be "50"
+        Mock Write-Host {}
+        it "Register-TaskletTouch allocates 53 to Weight when Read-Host is 3" {
+            (Register-TaskletTouch)[0].Weight | should be "53"
+        }
+
+        it "Should archive the tasklet created above" {
+            (Get-Tasklet)[0] | Complete-Tasklet | Should Be "Tasklet [Another Tasklet] Completed"
         }
     }
 }
