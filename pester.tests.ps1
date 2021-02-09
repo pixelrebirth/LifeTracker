@@ -27,6 +27,7 @@ describe "Local development execution" {
 
         it "Add-Tasklet uploads a document to DB" {
             Add-Tasklet -Value "Leadership" -Title "Another Tasklet" -Tags "Test,123"| Should be "Tasklet Saved"
+            Start-Sleep -milliseconds 500
             Add-Tasklet -Value "Systemic" -Title "Testing 123" | Should be "Tasklet Saved"
         }
         
