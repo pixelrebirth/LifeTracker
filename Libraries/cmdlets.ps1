@@ -39,7 +39,7 @@ function New-TaskletDatabase {
     Close-LiteDBConnection
     
     if (Test-Path $Path){
-        return $Path
+        return "$Path Exists"
     }
     else {
         return $false
@@ -47,57 +47,102 @@ function New-TaskletDatabase {
 }
 
 function Get-Tasklet {
-    Import-Module PSLiteDB | Out-Null
-    $OutputArray = @()
-
-    Open-LiteDBConnection $global:DatabaseLocation | Out-Null
-    $GetDocuments = Find-LiteDBDocument -Collection "tasklets"
-    Close-LiteDBConnection | Out-Null
-    
-    foreach ($Document in $GetDocuments){
-        $OutputArray += [tasklet]::new($Document)
+    [cmdletbinding()]
+    param(
+        $Tags
+    )
+    DynamicParam {
+        . $global:LifeTrackerModulePath/Libraries/functions.ps1
+        [Scriptblock]$ConfigValues = {(Get-TaskletConfig).values}
+        return Get-DynamicParam -ParamName Value -ParamCode $ConfigValues
     }
 
-    $OutputArray | Sort Weight -Descending
+    begin {
+        $Value = $PsBoundParameters['Value']
+
+        Import-Module PSLiteDB | Out-Null
+        $OutputArray = @()
+        Open-LiteDBConnection $global:DatabaseLocation | Out-Null
+    }
+    process {
+        $GetDocuments = Find-LiteDBDocument -Collection "tasklets"
+        if ($Tags){
+            $GetDocuments = $GetDocuments |  where Tags -Contain $Tags
+        }
+        if ($Value){
+            $GetDocuments = $GetDocuments |  where Value -Contains $Value
+        }
+        
+        foreach ($Document in $GetDocuments){
+            $OutputArray += [tasklet]::new($Document)
+        }
+    }
+    end {
+        Close-LiteDBConnection | Out-Null
+        if ($OutputArray){
+            $OutputArray | Sort Weight -Descending
+        }
+        else {
+            "No Tasklets Found"
+        }
+    }
 }
 
 function Register-TaskletTouch {
     [cmdletbinding()]
     param(
-        $Tags,
-        $Value
+        $Tags
     )
+    DynamicParam {
+        . $global:LifeTrackerModulePath/Libraries/functions.ps1
+        [Scriptblock]$ConfigValues = {(Get-TaskletConfig).values}
+        return Get-DynamicParam -ParamName Value -ParamCode $ConfigValues
+    }
+
     begin{
-        $AllTasklets = Get-Tasklet -Tags $Tags -Value $Value
+        $Value = $PsBoundParameters['Value']
+
+        $AllTasklets = Get-Tasklet
+        if ($Tags){
+            $AllTasklets = $AllTasklets |  where Tags -Contain $Tag
+        }
+        if ($Value){
+            $AllTasklets = $AllTasklets |  where Value -Contains $Value
+        }
     }
     process {
-        Write-Host -ForegroundColor Yellow "`nPlease enter weight 1-5 or press return`n------"
-        foreach($Index in 0..$($AllTasklets.count-1)){
-            do {
-                $Title = $AllTasklets[$Index].Title
-                [int]$Weight  = Read-Host $Title
-                if ($AllTasklets.count -gt 1){
-                    $PerTaskletDecrease = $Weight / ($AllTasklets.count-1)
-                }
-                else {
-                    $PerTaskletDecrease = 0
-                }
-            }
-            until (
-                $Weight -ge 0 -AND $Weight -le 5
-            )
-            
-            $AllTasklets[$Index].weight += ($Weight + $PerTaskletDecrease)
+        if ($AllTasklets){
+            Write-Host -ForegroundColor Yellow "`nPlease enter weight 1-5 or press return`n------"
             foreach($Index in 0..$($AllTasklets.count-1)){
-                $AllTasklets[$Index].weight -= $PerTaskletDecrease
+                do {
+                    $Title = $AllTasklets[$Index].Title
+                    [int]$Weight  = Read-Host $Title
+                    if ($AllTasklets.count -gt 1){
+                        $PerTaskletDecrease = $Weight / ($AllTasklets.count-1)
+                    }
+                    else {
+                        $PerTaskletDecrease = 0
+                    }
+                }
+                until (
+                    $Weight -ge 0 -AND $Weight -le 5
+                )
+                
+                $AllTasklets[$Index].weight += ($Weight + $PerTaskletDecrease)
+                foreach($Index in 0..$($AllTasklets.count-1)){
+                    $AllTasklets[$Index].weight -= $PerTaskletDecrease
+                }
             }
         }
     }
     end {
-       foreach ($Index in 0..$($AllTasklets.count-1)) {
-            $AllTasklets[$Index].UpdateDb()
+        if ($AllTasklets){
+            foreach ($Index in 0..$($AllTasklets.count-1)) {
+                $AllTasklets[$Index].UpdateDb()
+            }
+            $AllTasklets
         }
-        Get-Tasklet -Tags $Tags -Value $Value
+        else {"No Tasklets Found"}
     }
 }
 
@@ -118,13 +163,17 @@ function Complete-Tasklet {
         Open-LiteDBConnection $global:DatabaseLocation | Out-Null
     }
     process{
+        $InputObject | ConvertTo-LiteDbBSON | Add-LiteDBDocument -Collection "tasklets_archive" | Out-Null
         try{
-            $InputObject | ConvertTo-LiteDbBSON | Add-LiteDBDocument -Collection "Tasklets_Archive"
-            Find-LiteDbDocument -collection "tasklets" -id $InputObject._id | Remove-LiteDbDocument
-            Write-Output "Tasklet [$($InputObject.title)] Completed"
+            Remove-LiteDbDocument -Collection 'tasklets' -Id $($InputObject._id.guid)
+            if (!(Find-LiteDbDocument -Collection 'tasklets' -Id $($InputObject._id.guid) -WarningAction 0)){
+                Write-Output "Tasklet [$($InputObject.title)] Completed"
+            }
+            else {throw "Something Happened in Remove-LiteDbDocument"}
         }
         catch {
             throw "Error occurred uploading or deleting object from archive, error: $($error[0].exception.message)"
+            Close-LiteDBConnection | Out-Null
         }
     }
     end{
