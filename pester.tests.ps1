@@ -1,6 +1,3 @@
-git add -A
-git commit -m "Auto-$((get-date) -replace(" |:|/","-"))"
-git push
 describe "Local development execution" {
     $global:LifeTrackerModulePath = "."
     $global:DatabaseLocation = "./test.db"
