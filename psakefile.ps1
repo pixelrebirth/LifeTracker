@@ -9,9 +9,14 @@ Task Commit -Depends Testing {
 }
 
 Task Testing {
-    $pester = Invoke-Pester -CodeCoverage ./Libraries/*.ps1
-    $pester.FailedCount -eq 0 -AND 
+    $pester = Invoke-Pester -CodeCoverage ./Libraries/*.ps1 -PassThru
+    $conditional =
+        $pester.FailedCount -eq 0 -AND 
         [int]$($pester.CodeCoverage.HitCommands.Count / $pester.CodeCoverage.NumberOfCommandsAnalyzed * 100) -ge 90
+    
+    if (!$conditional){
+        throw "Build Failed"
+    }
 }
 
 # Add conditional builds for Build(test)/Minor(dev)/Major(prod)

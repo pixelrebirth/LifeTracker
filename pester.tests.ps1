@@ -12,10 +12,15 @@ describe "Local development execution" {
 
     context "LifeTrackerClasses" {
         $tasklet = [tasklet]::new("Test Title","Creativity")
-        it "Should instantiate an object with repeat of Once" {
+        it "Should instantiate a tasklet class" {
             $tasklet.title | should be "Test Title"
             $tasklet.CreatedOn | Should Not Be Null
             $tasklet.UpdatedOn | Should Not Be Null
+        }
+
+        $rewardlet = [rewardlet]::new("Reward Me",5,5)
+        it "Should instantiate a rewardlet class" {
+            $rewardlet.title | should be "Reward Me"
         }
     }
 
@@ -40,11 +45,11 @@ describe "Local development execution" {
         it "Register-TaskletTouch allocates 50 to Weight when Read-Host is 3" {
             (Register-TaskletTouch)[0].Weight | should be "50"
         }
-
+        
         it "Register-TaskletTouch should filter down to only value/tag if asked" {
-            Register-TaskletTouch -Value "Creativity" | Should Be "No Tasklets Found"
+            Register-TaskletTouch -Value "Creativity" -Tags "Test" | Should Be "No Tasklets Found"
         }
-
+        
         it "Should archive the tasklet created above" {
             (Get-Tasklet -Value "Systemic") | Complete-Tasklet | Should Be "Tasklet [Testing 123] Completed"
         }

@@ -51,11 +51,10 @@ class Rewardlet : Base {
     [ValidateSet(1,2,3,5,8,13)]$DopamineIndex
     $TaskRequirement = 100
 
-    Rewardlet ($Title,$TimeEstimate,$DopamineIndex,$TaskRequirement) {
+    Rewardlet ($Title,$TimeEstimate,$DopamineIndex) {
         $this.Title = $Title
         $this.TimeEstimate = $TimeEstimate
         $this.DopamineIndex = $DopamineIndex
-        $this.TaskRequirement = $TaskRequirement
     }
 }
 
