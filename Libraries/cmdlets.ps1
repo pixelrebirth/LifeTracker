@@ -34,12 +34,21 @@ function New-TaskletDatabase {
 
     New-LiteDBDatabase -Path $Path | Out-Null
     Open-LiteDBConnection -Path $Path | Out-Null
-    New-LiteDBCollection "tasklets" | Out-Null
-    New-LiteDBCollection "tasklets_archive" | Out-Null
-    New-LiteDBCollection "rewardlets" | Out-Null
-    New-LiteDBCollection "journlets" | Out-Null
-    New-LiteDBCollection "timelets" | Out-Null
-    New-LiteDBCollection "habitlets" | Out-Null
+    
+    $Collections = @(
+        "tasklets",
+        "rewardlets",
+        "journlets",
+        "timelets",
+        "habitlets",
+        "characters"
+    )
+
+    foreach ($Item in $Collections){
+        New-LiteDBCollection "$item" | Out-Null
+        New-LiteDBCollection "$($item)_archive" | Out-Null
+    }
+
     Close-LiteDBConnection
     
     if (Test-Path $Path){
