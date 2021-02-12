@@ -1,12 +1,14 @@
 Import-Module Psake
 
 properties {
-    $Message = "Auto-$((get-date) -replace(" |:|/","-"))"
+    $Message
 }
 
 Task default -depends Commit
 
 Task Commit -Depends Testing {
+    if (!$Message){$Message = "Auto-$((get-date) -replace(" |:|/","-"))"}
+    
     git add -A
     git commit -m $Message
     git push
