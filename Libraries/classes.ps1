@@ -1,12 +1,32 @@
-class Tasklet {
-    [ValidateLength(5,40)]$Title
-    [double]$Weight = 50
-    $Tags
-    $Value
+class Base {
     [guid]$_id
     $DbPath = $global:DatabaseLocation
     [long]$CreatedOn = (Get-Date).Ticks
     [long]$UpdatedOn
+
+    [void] AddToDb () {
+        $this.UpdatedOn = (Get-Date).Ticks
+        $BSON = $this | ConvertTo-LiteDbBSON
+        
+        Open-LiteDBConnection $this.DbPath
+        Add-LiteDBDocument -Document $BSON -Collection "$($this)s"
+        Close-LiteDBConnection
+    }
+
+    [void] UpdateDb () {
+        $this.UpdatedOn = (Get-Date).Ticks
+        Open-LiteDBConnection $this.DbPath
+        $BSON = $this | ConvertTo-LiteDbBSON | Update-LiteDBDocument -Collection "$($this)s"
+        Close-LiteDBConnection
+    }
+}
+
+class Tasklet : Base {
+    [ValidateLength(5,40)]$Title
+    [double]$Weight = 50
+    $Tags
+    $Value
+    
 
     Tasklet ($title,$value) {
         $this.title = $title
@@ -23,42 +43,48 @@ class Tasklet {
         $this.Tags = $Document.Tags
         $this.UpdatedOn = (Get-Date).Ticks
     }
-
-    [void] AddToDb () {
-        $this.UpdatedOn = (Get-Date).Ticks
-        $BSON = $this | ConvertTo-LiteDbBSON
-        
-        Open-LiteDBConnection $this.DbPath
-        Add-LiteDBDocument -Document $BSON -Collection "tasklets"
-        Close-LiteDBConnection
-    }
-
-    [void] UpdateDb () {
-        $this.UpdatedOn = (Get-Date).Ticks
-        Open-LiteDBConnection $this.DbPath
-        $BSON = $this | ConvertTo-LiteDbBSON | Update-LiteDBDocument -Collection "tasklets"
-        Close-LiteDBConnection
-    }
 }
 
-class Rewardlet {
+class Rewardlet : Base {
     [ValidateLength(5,40)]$Title
-    [int]$Cost
-    $Type
+    [ValidateSet(1,2,3,5,8,13)]$TimeEstimate
+    [ValidateSet(1,2,3,5,8,13)]$DopamineIndex
+    $TaskRequirement = 100
 
-    Rewardlet ($Title,$Cost,$Type) {
+    Rewardlet ($Title,$TimeEstimate,$DopamineIndex,$TaskRequirement) {
         $this.Title = $Title
-        $this.Cost = $Cost
-        $this.Type = $Type
-    }
-    
-    [void] SubmitReward () {
-        $this.UpdatedOn = (Get-Date).Ticks
-        $BSON = $this | ConvertTo-LiteDbBSON
-        
-        Open-LiteDBConnection $this.DbPath
-        Add-LiteDBDocument -Document $BSON -Collection "rewardlets"
-        Close-LiteDBConnection
+        $this.TimeEstimate = $TimeEstimate
+        $this.DopamineIndex = $DopamineIndex
+        $this.TaskRequirement = $TaskRequirement
     }
 }
 
+class Journlet : Base {
+    [ValidateLength(5,40)]$Title
+    $Body
+
+    Journlet ($Title,$Body) {
+        $this.Title = $Title
+        $this.Body = $Body
+    }
+}
+
+class Habitlet : Base {
+    [ValidateLength(5,40)]$Title
+    $Body
+
+    Habitlet ($Title,$Body) {
+        $this.Title = $Title
+        $this.Body = $Body
+    }
+}
+
+class Timelet : Base {
+    [ValidateLength(5,40)]$Title
+    $Body
+
+    Timelet ($Title,$Body) {
+        $this.Title = $Title
+        $this.Body = $Body
+    }
+}

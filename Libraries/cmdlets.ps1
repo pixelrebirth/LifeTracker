@@ -37,6 +37,9 @@ function New-TaskletDatabase {
     New-LiteDBCollection "tasklets" | Out-Null
     New-LiteDBCollection "tasklets_archive" | Out-Null
     New-LiteDBCollection "rewardlets" | Out-Null
+    New-LiteDBCollection "journlets" | Out-Null
+    New-LiteDBCollection "timelets" | Out-Null
+    New-LiteDBCollection "habitlets" | Out-Null
     Close-LiteDBConnection
     
     if (Test-Path $Path){
