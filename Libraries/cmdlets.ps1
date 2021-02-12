@@ -36,6 +36,7 @@ function New-TaskletDatabase {
     Open-LiteDBConnection -Path $Path | Out-Null
     New-LiteDBCollection "tasklets" | Out-Null
     New-LiteDBCollection "tasklets_archive" | Out-Null
+    New-LiteDBCollection "rewardlets" | Out-Null
     Close-LiteDBConnection
     
     if (Test-Path $Path){
@@ -49,7 +50,8 @@ function New-TaskletDatabase {
 function Get-Tasklet {
     [cmdletbinding()]
     param(
-        $Tags
+        $Tags,
+        [switch]$FormatView
     )
     DynamicParam {
         . $global:LifeTrackerModulePath/Libraries/functions.ps1
@@ -80,7 +82,12 @@ function Get-Tasklet {
     end {
         Close-LiteDBConnection | Out-Null
         if ($OutputArray){
-            $OutputArray | Sort Weight -Descending
+            if ($FormatView){
+                $OutputArray | Sort Weight -Descending | Select Title,Weight,Value,Tags
+            }
+            else {
+                $OutputArray | Sort Weight -Descending
+            }
         }
         else {
             "No Tasklets Found"
@@ -172,11 +179,20 @@ function Complete-Tasklet {
             else {throw "Something Happened in Remove-LiteDbDocument"}
         }
         catch {
-            throw "Error occurred uploading or deleting object from archive, error: $($error[0].exception.message)"
+            Write-Error "Error occurred uploading or deleting object from archive, error: $($error[0].exception.message)"
             Close-LiteDBConnection | Out-Null
         }
     }
     end{
         Close-LiteDBConnection | Out-Null
     }
+}
+
+function Add-RewardLet {
+    #Add rewards like tasklets, weight included as "cost", 100 base
+    #Increase Cost on use, borrowing accordingly from other rewards like tasklet weight does
+    #Cost increase is based on Tasklet Active pool, more tasks, more cost increase on favorite rewards
+    #Designer Rewards and Experiences
+    #Variable cost metrics, ChronoTokens, WillpowerTokens, or TaskTokens
+    #Track on
 }

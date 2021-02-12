@@ -27,14 +27,11 @@ describe "Local development execution" {
 
         it "Add-Tasklet uploads a document to DB" {
             Add-Tasklet -Value "Leadership" -Title "Another Tasklet" -Tags "Test,123"| Should be "Tasklet Saved"
-            Start-Sleep -milliseconds 500
             Add-Tasklet -Value "Systemic" -Title "Testing 123" | Should be "Tasklet Saved"
         }
         
         it "Get-Tasklet returns created tasklet" {
-            (Get-Tasklet)[0].title | Should Be "Another Tasklet"
-            (Get-Tasklet)[0].tags[0] | Should Be "Test"
-            (Get-Tasklet -Tags "Test").title | Should Be "Another Tasklet"
+            (Get-Tasklet -FormatView -Tags "Test").title | Should Be "Another Tasklet"
             (Get-Tasklet -Value "Systemic").title | Should Be "Testing 123"
         }
         
@@ -49,7 +46,7 @@ describe "Local development execution" {
         }
 
         it "Should archive the tasklet created above" {
-            (Get-Tasklet)[0] | Complete-Tasklet | Should Be "Tasklet [Another Tasklet] Completed"
+            (Get-Tasklet -Value "Systemic") | Complete-Tasklet | Should Be "Tasklet [Testing 123] Completed"
         }
     }
 }

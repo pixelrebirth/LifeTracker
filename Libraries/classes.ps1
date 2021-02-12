@@ -40,3 +40,25 @@ class Tasklet {
         Close-LiteDBConnection
     }
 }
+
+class Rewardlet {
+    [ValidateLength(5,40)]$Title
+    [int]$Cost
+    $Type
+
+    Rewardlet ($Title,$Cost,$Type) {
+        $this.Title = $Title
+        $this.Cost = $Cost
+        $this.Type = $Type
+    }
+    
+    [void] SubmitReward () {
+        $this.UpdatedOn = (Get-Date).Ticks
+        $BSON = $this | ConvertTo-LiteDbBSON
+        
+        Open-LiteDBConnection $this.DbPath
+        Add-LiteDBDocument -Document $BSON -Collection "rewardlets"
+        Close-LiteDBConnection
+    }
+}
+
