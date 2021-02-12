@@ -178,26 +178,18 @@ function Complete-Tasklet {
         [parameter(ValueFromPipeline=$true)]$InputObject
     )
 
-    begin{
-        Open-LiteDBConnection $global:DatabaseLocation | Out-Null
-    }
+    begin{}
     process{
-        $InputObject | ConvertTo-LiteDbBSON | Add-LiteDBDocument -Collection "tasklets_archive" | Out-Null
         try{
-            Remove-LiteDbDocument -Collection 'tasklets' -Id $($InputObject._id.guid)
-            if (!(Find-LiteDbDocument -Collection 'tasklets' -Id $($InputObject._id.guid) -WarningAction 0)){
-                Write-Output "Tasklet [$($InputObject.title)] Completed"
-            }
-            else {throw "Something Happened in Remove-LiteDbDocument"}
+            $InputObject.archive()
+            Write-Output "Tasklet [$($InputObject.title)] Completed"
         }
         catch {
             Write-Error "Error occurred uploading or deleting object from archive, error: $($error[0].exception.message)"
             Close-LiteDBConnection | Out-Null
         }
     }
-    end{
-        Close-LiteDBConnection | Out-Null
-    }
+    end{}
 }
 
 function Add-RewardLet {

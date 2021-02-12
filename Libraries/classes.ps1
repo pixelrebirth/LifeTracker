@@ -16,7 +16,14 @@ class Base {
     [void] UpdateDb () {
         $this.UpdatedOn = (Get-Date).Ticks
         Open-LiteDBConnection $this.DbPath
-        $BSON = $this | ConvertTo-LiteDbBSON | Update-LiteDBDocument -Collection "$($this)s"
+        $this | ConvertTo-LiteDbBSON | Update-LiteDBDocument -Collection "$($this)s" | Out-Null
+        Close-LiteDBConnection
+    }
+
+    [void] Archive () {
+        Open-LiteDBConnection $this.DbPath
+        $this | ConvertTo-LiteDbBSON | Add-LiteDBDocument -Collection "$($this)s_archive"
+        Remove-LiteDbDocument -Collection "$($this)s" -Id $($this._id.guid) | Out-Null
         Close-LiteDBConnection
     }
 }
