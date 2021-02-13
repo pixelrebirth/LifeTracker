@@ -1,8 +1,9 @@
 class Base {
-    [guid]$_id
-    $DbPath = $global:DatabaseLocation
-    [long]$CreatedOn = (Get-Date).Ticks
-    [long]$UpdatedOn
+    [ValidateLength(5,40)]$Title
+    hidden [guid]$_id
+    hidden $DbPath = $script:DatabaseLocation
+    hidden [long]$CreatedOn = (Get-Date).Ticks
+    hidden [long]$UpdatedOn
 
     [void] AddToDb () {
         $this.UpdatedOn = (Get-Date).Ticks
@@ -29,7 +30,6 @@ class Base {
 }
 
 class Tasklet : Base {
-    [ValidateLength(5,40)]$Title
     [double]$Weight = 50
     $Tags
     $Value
@@ -53,7 +53,6 @@ class Tasklet : Base {
 }
 
 class Rewardlet : Base {
-    [ValidateLength(5,40)]$Title
     [ValidateSet(1,2,3,5,8,13)]$TimeEstimate
     [ValidateSet(1,2,3,5,8,13)]$DopamineIndex
     $TaskRequirement = 100
@@ -66,7 +65,6 @@ class Rewardlet : Base {
 }
 
 class Journlet : Base {
-    [ValidateLength(5,40)]$Title
     $Body
 
     Journlet ($Title,$Body) {
@@ -76,7 +74,6 @@ class Journlet : Base {
 }
 
 class Habitlet : Base {
-    [ValidateLength(5,40)]$Title
     $Body
 
     Habitlet ($Title,$Body) {
@@ -86,11 +83,74 @@ class Habitlet : Base {
 }
 
 class Timelet : Base {
-    [ValidateLength(5,40)]$Title
     $Body
 
     Timelet ($Title,$Body) {
         $this.Title = $Title
         $this.Body = $Body
     }
+}
+
+class Character : Base {
+    [ValidateLength(2,20)]$Name
+    [int]$TaskTokens
+    [int]$WillpowerTokens
+    [int]$ChronoTokens
+    [int]$BossTokens
+    [int]$Dharma
+    [ValidateSet('Character')]$BlobType
+
+    Character ($Name) {
+        $this.PopulateFromDb($Name)
+    }
+    
+    Character () { 
+        $this.PopulateFromDb("Alia.Stormchild")
+    }
+
+    [void] PopulateFromDb ($Name) {
+        Open-LiteDBConnection $script:DatabaseLocation | Out-Null
+        
+        $CharacterDocument = Find-LiteDBDocument -Collection "blobs" | where BlobType -eq 'Character'
+        if (!$CharacterDocument){
+            $this.NewCharacter($Name)
+            $CharacterDocument = Find-LiteDBDocument -Collection "blobs" | where BlobType -eq 'Character'
+        }
+        if ($CharacterDocument.count -ne 1){
+            $CharacterDocument = $CharacterDocument | where Name -eq $Name
+        }
+    
+        Close-LiteDBConnection | Out-Null
+
+        $this.SetCharacter($CharacterDocument)
+    }
+
+    hidden [void] SetCharacter ($CharacterDocument) {
+        $this.Name = $CharacterDocument.Name
+        $this.Title = $CharacterDocument.Title
+        $this.TaskTokens = $CharacterDocument.TaskTokens
+        $this.WillpowerTokens = $CharacterDocument.WillpowerTokens
+        $this.ChronoTokens = $CharacterDocument.ChronoTokens
+        $this.BossTokens = $CharacterDocument.BossTokens
+        $this.Dharma = $CharacterDocument.Dharma
+    }
+
+    [void] NewCharacter($Name) {
+        Open-LiteDBConnection $script:DatabaseLocation | Out-Null
+        
+        $CharacterBase = @{
+            Name=$Name
+            TaskTokens=0
+            WillpowerTokens=0
+            ChronoTokens=0
+            BossTokens=0
+            Dharma=100
+        } 
+        
+        $BSON = $CharacterBase | ConvertTo-LiteDbBSON
+        Add-LiteDBDocument -Document $BSON -Collection "$($this)s"
+
+        Close-LiteDBConnection | Out-Null
+    }
+    [void] AddTaskToken() {}
 }

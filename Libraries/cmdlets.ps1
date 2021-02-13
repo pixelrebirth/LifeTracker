@@ -5,7 +5,7 @@ function Add-Tasklet {
         $Tags
     )
     DynamicParam {
-        . $global:LifeTrackerModulePath/Libraries/functions.ps1
+        . $script:LifeTrackerModulePath/Libraries/functions.ps1
         [Scriptblock]$ConfigValues = {(Get-TaskletConfig).values}
         return Get-DynamicParam -ParamName Value -ParamCode $ConfigValues
     }
@@ -26,7 +26,7 @@ function Add-Tasklet {
 
 function New-TaskletDatabase {
     param(
-        $Path = $global:DatabaseLocation
+        $Path = $script:DatabaseLocation
     )
     Import-Module PSLiteDB | Out-Null
     
@@ -41,7 +41,7 @@ function New-TaskletDatabase {
         "journlets",
         "timelets",
         "habitlets",
-        "characters"
+        "blob"
     )
 
     foreach ($Item in $Collections){
@@ -66,7 +66,7 @@ function Get-Tasklet {
         [switch]$FormatView
     )
     DynamicParam {
-        . $global:LifeTrackerModulePath/Libraries/functions.ps1
+        . $script:LifeTrackerModulePath/Libraries/functions.ps1
         [Scriptblock]$ConfigValues = {(Get-TaskletConfig).values}
         return Get-DynamicParam -ParamName Value -ParamCode $ConfigValues
     }
@@ -76,7 +76,7 @@ function Get-Tasklet {
 
         Import-Module PSLiteDB | Out-Null
         $OutputArray = @()
-        Open-LiteDBConnection $global:DatabaseLocation | Out-Null
+        Open-LiteDBConnection $script:DatabaseLocation | Out-Null
     }
     process {
         $GetDocuments = Find-LiteDBDocument -Collection "tasklets"
@@ -113,7 +113,7 @@ function Register-TaskletTouch {
         $Tags
     )
     DynamicParam {
-        . $global:LifeTrackerModulePath/Libraries/functions.ps1
+        . $script:LifeTrackerModulePath/Libraries/functions.ps1
         [Scriptblock]$ConfigValues = {(Get-TaskletConfig).values}
         return Get-DynamicParam -ParamName Value -ParamCode $ConfigValues
     }
@@ -199,4 +199,28 @@ function Add-RewardLet {
     #Designer Rewards and Experiences
     #Variable cost metrics, ChronoTokens, WillpowerTokens, or TaskTokens
     #Track on
+}
+
+function New-LifeTrackerCharacter {
+    param(
+        $Name="Alia Stormchild"
+    )
+    
+    $Character = [Character]::new($Name)
+    try {
+        $Character.AddToDb()
+        "Added Character Successfully"
+    }
+    catch {
+        "Could not add character to database"
+    }
+    
+}
+
+function Get-LifeTrackerCharacter {
+    param(
+        $Name="Alia Stormchild"
+    )
+
+    $Character = [Character]::new($Name)
 }

@@ -1,12 +1,15 @@
-$global:LifeTrackerModulePath = "."
-$global:DatabaseLocation = "./test.db"
+$script:LifeTrackerModulePath = "."
+$script:DatabaseLocation = "./test.db"
 
 . ./Libraries/classes.ps1
 . ./Libraries/functions.ps1
 . ./Libraries/cmdlets.ps1
 
+Import-Module PSLiteDB
 describe "LifeTrackerFunctions" {
+    it "Should populate module scope vars" {
 
+    }
 }
 
 describe "LifeTrackerClasses" {
@@ -21,10 +24,15 @@ describe "LifeTrackerClasses" {
     it "Should instantiate a rewardlet class" {
         $rewardlet.title | should be "Reward Me"
     }
+
+    it "Should create a character in the DB" {
+        $character = [character]::new()
+        $character.Dharma | Should Be 100
+    }
 }
 
 describe "LifeTrackerCmdlets" {
-    Remove-Item $global:DatabaseLocation -Force -ErrorAction 0
+    Remove-Item $script:DatabaseLocation -Force -ErrorAction 0
     it "Should create a database for the App" {
         New-TaskletDatabase | should be $true
     }
@@ -51,5 +59,9 @@ describe "LifeTrackerCmdlets" {
     
     it "Should archive the tasklet created above" {
         (Get-Tasklet -Value "Systemic") | Complete-Tasklet | Should Be "Tasklet [Testing 123] Completed"
+    }
+
+    it "Should create a character in Database and Validate it" {
+        New-LifeTrackerCharacter
     }
 }
