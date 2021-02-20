@@ -1,6 +1,6 @@
 class Base {
     [ValidateLength(5,40)]$Title
-    hidden [guid]$_id
+    hidden [guid]$_id = (New-Guid).guid
     hidden $DbPath = $script:DatabaseLocation
     hidden [long]$CreatedOn = (Get-Date).Ticks
     hidden [long]$UpdatedOn
@@ -136,8 +136,6 @@ class Character : Base {
     }
 
     [void] NewCharacter($Name) {
-        Open-LiteDBConnection $script:DatabaseLocation | Out-Null
-        
         $CharacterBase = @{
             Name=$Name
             TaskTokens=0
@@ -149,8 +147,6 @@ class Character : Base {
         
         $BSON = $CharacterBase | ConvertTo-LiteDbBSON
         Add-LiteDBDocument -Document $BSON -Collection "$($this)s"
-
-        Close-LiteDBConnection | Out-Null
     }
     [void] AddTaskToken() {}
 }

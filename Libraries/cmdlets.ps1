@@ -41,7 +41,7 @@ function New-TaskletDatabase {
         "journlets",
         "timelets",
         "habitlets",
-        "blob"
+        "blobs"
     )
 
     foreach ($Item in $Collections){
@@ -81,10 +81,10 @@ function Get-Tasklet {
     process {
         $GetDocuments = Find-LiteDBDocument -Collection "tasklets"
         if ($Tags){
-            $GetDocuments = $GetDocuments |  where Tags -Contain $Tags
+            $GetDocuments = $GetDocuments | where Tags -Contain $Tags
         }
         if ($Value){
-            $GetDocuments = $GetDocuments |  where Value -Contains $Value
+            $GetDocuments = $GetDocuments | where Value -Contains $Value
         }
         
         foreach ($Document in $GetDocuments){

@@ -12,25 +12,6 @@ describe "LifeTrackerFunctions" {
     }
 }
 
-describe "LifeTrackerClasses" {
-    $tasklet = [tasklet]::new("Test Title","Creativity")
-    it "Should instantiate a tasklet class" {
-        $tasklet.title | should be "Test Title"
-        $tasklet.CreatedOn | Should Not Be Null
-        $tasklet.UpdatedOn | Should Not Be Null
-    }
-
-    $rewardlet = [rewardlet]::new("Reward Me",5,8)
-    it "Should instantiate a rewardlet class" {
-        $rewardlet.title | should be "Reward Me"
-    }
-
-    it "Should create a character in the DB" {
-        $character = [character]::new()
-        $character.Dharma | Should Be 100
-    }
-}
-
 describe "LifeTrackerCmdlets" {
     Remove-Item $script:DatabaseLocation -Force -ErrorAction 0
     it "Should create a database for the App" {
@@ -63,5 +44,24 @@ describe "LifeTrackerCmdlets" {
 
     it "Should create a character in Database and Validate it" {
         New-LifeTrackerCharacter
+    }
+}
+
+describe "LifeTrackerClasses" {
+    $tasklet = [tasklet]::new("Test Title","Creativity")
+    it "Should instantiate a tasklet class" {
+        $tasklet.title | should be "Test Title"
+        $tasklet.CreatedOn | Should Not Be Null
+        $tasklet.UpdatedOn | Should Not Be Null
+    }
+
+    $rewardlet = [rewardlet]::new("Reward Me",5,8)
+    it "Should instantiate a rewardlet class" {
+        $rewardlet.title | should be "Reward Me"
+    }
+
+    it "Should create a character in the DB" {
+        $character = [character]::new()
+        $character.Dharma | Should Be 100
     }
 }
