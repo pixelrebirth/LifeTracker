@@ -15,11 +15,10 @@ Task Commit -Depends Testing {
 }
 
 Task Testing {
-    $pester = Invoke-Pester -CodeCoverage ./Libraries/*.ps1 -PassThru
-    $CodeCoverage = [int]$($pester.CodeCoverage.HitCommands.Count / $pester.CodeCoverage.NumberOfCommandsAnalyzed * 100) -ge 90
+    $pester = Invoke-Pester -PassThru
     Assert (
-        $pester.FailedCount -eq 0 -AND $CodeCoverage
-    ) "Cannot Complete Build Failures: $($pester.FailedCount) Coverage: $CodeCoverage"
+        $pester.FailedCount -eq 0
+    ) "Cannot Complete Build Failures: $($pester.FailedCount) Coverage: NaN"
 }
 
 # Add conditional builds for Build(test)/Minor(dev)/Major(prod)

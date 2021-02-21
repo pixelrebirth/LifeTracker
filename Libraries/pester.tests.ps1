@@ -1,20 +1,17 @@
-$global:LifeTrackerModulePath = "."
+$global:LifeTrackerModulePath = $pwd.path
 $global:DatabaseLocation = "./test.db"
 
-. ./Libraries/classes.ps1
-. ./Libraries/functions.ps1
-. ./Libraries/cmdlets.ps1
-
-Import-Module PSLiteDB
-describe "LifeTrackerFunctions" {
-    it "Should populate module scope vars" {
-
+describe "LifeTracker" {
+    BeforeAll {
+        . $global:LifeTrackerModulePath/Libraries/classes.ps1
+        . $global:LifeTrackerModulePath/Libraries/functions.ps1
+        . $global:LifeTrackerModulePath/Libraries/cmdlets.ps1
+    
+        Import-Module PSLiteDB
     }
-}
 
-Remove-Item $global:DatabaseLocation -Force -ErrorAction 0
-describe "LifeTrackerCmdlets" {
     it "Should create a database for the App" {
+        Remove-Item $global:DatabaseLocation -Force -ErrorAction 0
         New-TaskletDatabase | Should -BeTrue
     }
 
@@ -27,14 +24,18 @@ describe "LifeTrackerCmdlets" {
         (Get-Tasklet -FormatView -Tags "Test").title | Should -Be "Another Tasklet"
         (Get-Tasklet -Value "Systemic").title | Should -Be "Testing 123"
     }
-    
-    Mock Read-Host {return "3"}
-    Mock Write-Host {}
+
     it "Register-TaskletTouch allocates 50 to Weight when Read-Host is 3" {
+        Mock Read-Host {return "3"}
+        Mock Write-Host {}
+
         (Register-TaskletTouch)[0].Weight | Should -Be "50"
     }
     
     it "Register-TaskletTouch should filter down to only value/tag if asked" {
+        Mock Read-Host {return "3"}
+        Mock Write-Host {}
+
         Register-TaskletTouch -Value "Creativity" -Tags "Test" | Should -Be "No Tasklets Found"
     }
     
@@ -42,26 +43,7 @@ describe "LifeTrackerCmdlets" {
         (Get-Tasklet -Value "Systemic") | Complete-Tasklet | Should -Be "Tasklet [Testing 123] Completed"
     }
 
-    it "Should create a character in Database and Validate it" {
-        New-LifeTrackerCharacter
-    }
-}
-
-describe "LifeTrackerClasses" {
-    $tasklet = [tasklet]::new("Test Title","Creativity")
-    it "Should instantiate a tasklet class" {
-        $tasklet.title | Should -Be "Test Title"
-        $tasklet.CreatedOn | Should -Not -Be Null
-        $tasklet.UpdatedOn | Should -Not -Be Null
-    }
-
-    $rewardlet = [rewardlet]::new("Reward Me",5,8)
-    it "Should instantiate a rewardlet class" {
-        $rewardlet.title | Should -Be "Reward Me"
-    }
-
-    it "Should create a character in the DB" {
-        $character = [character]::new()
-        $character.Dharma | Should -Be 100
-    }
+    # it "Should create a character in Database and Validate it" {
+    #     (New-LifeTrackerCharacter).name | should -be "Alia Stormchild"
+    # }
 }
