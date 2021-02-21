@@ -1,5 +1,5 @@
-$script:LifeTrackerModulePath = "."
-$script:DatabaseLocation = "./test.db"
+$global:LifeTrackerModulePath = "."
+$global:DatabaseLocation = "./test.db"
 
 . ./Libraries/classes.ps1
 . ./Libraries/functions.ps1
@@ -12,7 +12,7 @@ describe "LifeTrackerFunctions" {
     }
 }
 
-Remove-Item $script:DatabaseLocation -Force -ErrorAction 0
+Remove-Item $global:DatabaseLocation -Force -ErrorAction 0
 describe "LifeTrackerCmdlets" {
     it "Should create a database for the App" {
         New-TaskletDatabase | Should -BeTrue

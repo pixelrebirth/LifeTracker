@@ -26,19 +26,19 @@ function Get-DynamicParam {
 }
 
 function Get-TaskletConfig {
-    Get-Content "$script:LifeTrackerModulePath/config.json" | ConvertFrom-Json
+    Get-Content "$global:LifeTrackerModulePath/config.json" | ConvertFrom-Json
 }
 
 function Request-LifeTrackerConfig {
     param(
-        $Path = $script:DatabaseLocation
+        $Path = $global:DatabaseLocation
     )
     Import-Module PSLiteDB | Out-Null
     Open-LiteDBConnection -Path $Path | Out-Null
     
     $Tasklets = Get-Tasklet
-    $Script:Values = ($Tasklets.value | sort -unique).tolower()
-    $Script:Tags = ($Tasklets.tags | sort -unique).tolower()
+    $global:Values = ($Tasklets.value | sort -unique).tolower()
+    $global:Tags = ($Tasklets.tags | sort -unique).tolower()
     
-    $Script:Character = Get-Character
+    $global:Character = Get-Character
 }

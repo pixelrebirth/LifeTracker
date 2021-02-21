@@ -1,7 +1,7 @@
 class Base {
     [ValidateLength(5,40)]$Title
     hidden [guid]$_id = (New-Guid).guid
-    hidden $DbPath = $script:DatabaseLocation
+    hidden $DbPath = $global:DatabaseLocation
     hidden [long]$CreatedOn = (Get-Date).Ticks
     hidden [long]$UpdatedOn
 
@@ -109,7 +109,7 @@ class Character : Base {
     }
 
     [void] PopulateFromDb ($Name) {
-        Open-LiteDBConnection $script:DatabaseLocation | Out-Null
+        Open-LiteDBConnection $global:DatabaseLocation | Out-Null
         
         $CharacterDocument = Find-LiteDBDocument -Collection "blobs" | where BlobType -eq 'Character'
         if (!$CharacterDocument){
