@@ -37,8 +37,8 @@ function Request-LifeTrackerConfig {
     Open-LiteDBConnection -Path $Path | Out-Null
     
     $Tasklets = Get-Tasklet
-    $Script:Values = ($Tasklets.value | sort -unique).tolower()
-    $Script:Tags = ($Tasklets.tags | sort -unique).tolower()
+    $script:Values = ($Tasklets.value | sort -unique).tolower()
+    $script:Tags = ($Tasklets.tags | sort -unique).tolower()
     
-    $Script:Character = Get-Character
+    $script:Character = Get-Character
 }

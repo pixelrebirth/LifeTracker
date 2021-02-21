@@ -41,7 +41,8 @@ function New-TaskletDatabase {
         "journlets",
         "timelets",
         "habitlets",
-        "blob"
+        "blobs",
+        "characters"
     )
 
     foreach ($Item in $Collections){
@@ -81,10 +82,10 @@ function Get-Tasklet {
     process {
         $GetDocuments = Find-LiteDBDocument -Collection "tasklets"
         if ($Tags){
-            $GetDocuments = $GetDocuments |  where Tags -Contain $Tags
+            $GetDocuments = $GetDocuments | where Tags -Contain $Tags
         }
         if ($Value){
-            $GetDocuments = $GetDocuments |  where Value -Contains $Value
+            $GetDocuments = $GetDocuments | where Value -Contains $Value
         }
         
         foreach ($Document in $GetDocuments){
@@ -193,34 +194,5 @@ function Complete-Tasklet {
 }
 
 function Add-RewardLet {
-    #Add rewards like tasklets, weight included as "cost", 100 base
-    #Increase Cost on use, borrowing accordingly from other rewards like tasklet weight does
-    #Cost increase is based on Tasklet Active pool, more tasks, more cost increase on favorite rewards
-    #Designer Rewards and Experiences
-    #Variable cost metrics, ChronoTokens, WillpowerTokens, or TaskTokens
-    #Track on
-}
 
-function New-LifeTrackerCharacter {
-    param(
-        $Name="Alia Stormchild"
-    )
-    
-    $Character = [Character]::new($Name)
-    try {
-        $Character.AddToDb()
-        "Added Character Successfully"
-    }
-    catch {
-        "Could not add character to database"
-    }
-    
-}
-
-function Get-LifeTrackerCharacter {
-    param(
-        $Name="Alia Stormchild"
-    )
-
-    $Character = [Character]::new($Name)
 }
