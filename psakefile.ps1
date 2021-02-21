@@ -15,7 +15,7 @@ Task Commit -Depends Testing {
 }
 
 Task Testing {
-    $pester = Invoke-Pester -PassThru
+    $pester = Invoke-Pester -PassThru -Output Detailed
     Assert (
         $pester.FailedCount -eq 0
     ) "Cannot Complete Build Failures: $($pester.FailedCount) Coverage: NaN"
