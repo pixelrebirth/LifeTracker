@@ -42,8 +42,4 @@ describe "LifeTracker" {
     it "Should archive the tasklet created above" {
         (Get-Tasklet -Value "Systemic") | Complete-Tasklet | Should -Be "Tasklet [Testing 123] Completed"
     }
-
-    # it "Should create a character in Database and Validate it" {
-    #     (New-LifeTrackerCharacter).name | should -be "Alia Stormchild"
-    # }
 }
