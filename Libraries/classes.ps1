@@ -1,7 +1,7 @@
 class Base {
     [ValidateLength(5,40)]$Title
     [guid]$_id = (New-Guid).guid
-    $DbPath = $global:DatabaseLocation
+    $DbPath = $script:DatabaseLocation
     [long]$CreatedOn = (Get-Date).Ticks
     [long]$UpdatedOn
 

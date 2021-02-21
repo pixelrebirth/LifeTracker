@@ -1,17 +1,17 @@
-$global:LifeTrackerModulePath = $pwd.path
-$global:DatabaseLocation = "./test.db"
+$script:LifeTrackerModulePath = $pwd.path
+$script:DatabaseLocation = "./test.db"
 
 describe "LifeTracker" {
     BeforeAll {
-        . $global:LifeTrackerModulePath/Libraries/classes.ps1
-        . $global:LifeTrackerModulePath/Libraries/functions.ps1
-        . $global:LifeTrackerModulePath/Libraries/cmdlets.ps1
+        . $script:LifeTrackerModulePath/Libraries/classes.ps1
+        . $script:LifeTrackerModulePath/Libraries/functions.ps1
+        . $script:LifeTrackerModulePath/Libraries/cmdlets.ps1
     
         Import-Module PSLiteDB
     }
 
     it "Should create a database for the App" {
-        Remove-Item $global:DatabaseLocation -Force -ErrorAction 0
+        Remove-Item $script:DatabaseLocation -Force -ErrorAction 0
         New-TaskletDatabase | Should -BeTrue
     }
 
