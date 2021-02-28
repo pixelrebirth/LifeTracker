@@ -36,18 +36,21 @@ function New-TaskletDatabase {
     Open-LiteDBConnection -Path $Path | Out-Null
     
     $Collections = @(
-        "tasklets",
-        "rewardlets",
-        "journlets",
-        "timelets",
-        "habitlets",
-        "blobs",
-        "characters"
+        "tasklet",
+        "tasklet_archive",
+        "rewardlet",
+        "rewardlet_transaction",
+        "journlet",
+        "journlet_archive",
+        "timelet",
+        "timelet_archive",
+        "habitlet",
+        "habitlet_archive",
+        "token_transaction"
     )
 
     foreach ($Item in $Collections){
         New-LiteDBCollection "$item" | Out-Null
-        New-LiteDBCollection "$($item)_archive" | Out-Null
     }
 
     Close-LiteDBConnection
@@ -80,7 +83,7 @@ function Get-Tasklet {
         Open-LiteDBConnection $script:DatabaseLocation | Out-Null
     }
     process {
-        $GetDocuments = Find-LiteDBDocument -Collection "tasklets"
+        $GetDocuments = Find-LiteDBDocument -Collection "tasklet"
         if ($Tags){
             $GetDocuments = $GetDocuments | where Tags -Contain $Tags
         }
@@ -193,6 +196,19 @@ function Complete-Tasklet {
     end{}
 }
 
-function Add-RewardLet {
+function New-RewardLet {
+    param(
+        $Title,
+        $TimeEstimate,
+        $DopamineIndex
+    )
+    begin {
+        $Rewardlet = [rewardlet]::new($Title,$TimeEstimate,$DopamineIndex)
+    }
+    process {
+        $Rewardlet.AddToDb()
+    }
+    end {
 
+    }
 }

@@ -10,21 +10,21 @@ class Base {
         $BSON = $this | ConvertTo-LiteDbBSON
         
         Open-LiteDBConnection $this.DbPath
-        Add-LiteDBDocument -Document $BSON -Collection "$($this.gettype().name)s"
+        Add-LiteDBDocument -Document $BSON -Collection "$($this.gettype().name)"
         Close-LiteDBConnection
     }
 
     [void] UpdateDb () {
         $this.UpdatedOn = (Get-Date).Ticks
         Open-LiteDBConnection $this.DbPath
-        $this | ConvertTo-LiteDbBSON | Update-LiteDBDocument -Collection "$($this.gettype().name)s" | Out-Null
+        $this | ConvertTo-LiteDbBSON | Update-LiteDBDocument -Collection "$($this.gettype().name)" | Out-Null
         Close-LiteDBConnection
     }
 
     [void] Archive () {
         Open-LiteDBConnection $this.DbPath
-        $this | ConvertTo-LiteDbBSON | Add-LiteDBDocument -Collection "$($this.gettype().name)s_archive"
-        Remove-LiteDbDocument -Collection "$($this.gettype().name)s" -Id $($this._id.guid) | Out-Null
+        $this | ConvertTo-LiteDbBSON | Add-LiteDBDocument -Collection "$($this.gettype().name)_archive"
+        Remove-LiteDbDocument -Collection "$($this.gettype().name)" -Id $($this._id.guid) | Out-Null
         Close-LiteDBConnection
     }
 }
