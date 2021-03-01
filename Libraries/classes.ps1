@@ -5,27 +5,33 @@ class Base {
     [long]$CreatedOn = (Get-Date).Ticks
     [long]$UpdatedOn
 
-    [void] AddToDb () {
+    [void] UpdateCollection ($Collection) {
         $this.UpdatedOn = (Get-Date).Ticks
-        $BSON = $this | ConvertTo-LiteDbBSON
         
         Open-LiteDBConnection $this.DbPath
-        Add-LiteDBDocument -Document $BSON -Collection "$($this.gettype().name)"
+        $this | ConvertTo-LiteDbBSON | Update-LiteDBDocument -Collection $Collection | Out-Null
         Close-LiteDBConnection
     }
 
-    [void] UpdateDb () {
+    [void] RemoveFromCurrentCollection () {
         $this.UpdatedOn = (Get-Date).Ticks
-        Open-LiteDBConnection $this.DbPath
-        $this | ConvertTo-LiteDbBSON | Update-LiteDBDocument -Collection "$($this.gettype().name)" | Out-Null
-        Close-LiteDBConnection
-    }
 
-    [void] Archive () {
         Open-LiteDBConnection $this.DbPath
-        $this | ConvertTo-LiteDbBSON | Add-LiteDBDocument -Collection "$($this.gettype().name)_archive"
         Remove-LiteDbDocument -Collection "$($this.gettype().name)" -Id $($this._id.guid) | Out-Null
         Close-LiteDBConnection
+    }
+
+    [void] AddToCollection ($Collection)  {
+        $this.UpdatedOn = (Get-Date).Ticks
+        
+        Open-LiteDBConnection $this.DbPath
+        $this | ConvertTo-LiteDbBSON | Add-LiteDBDocument -Collection $Collection
+        Close-LiteDBConnection
+    }
+
+    [void] MoveToCollection ($Collection) {
+        $this.AddToCollection($Collection)
+        $this.RemoveFromCurrentCollection()
     }
 }
 
@@ -35,7 +41,7 @@ class Tasklet : Base {
     $Value
     
 
-    Tasklet ($title,$value) {
+    Tasklet ($Title,$Value) {
         $this.title = $title
         $this.Value = $value
         $this._id = (new-guid).guid
@@ -61,6 +67,12 @@ class Rewardlet : Base {
         $this.Title = $Title
         $this.TimeEstimate = $TimeEstimate
         $this.DopamineIndex = $DopamineIndex
+    }
+
+    Rewardlet ($Document) {
+        $this.Title = $Document.Title
+        $this._id = $Document._id
+        $this.UpdatedOn = (Get-Date).Ticks
     }
 }
 

@@ -19,7 +19,7 @@ function Add-Tasklet {
         }
     }
     End {
-        $Tasklet.AddToDb()
+        $Tasklet.AddToCollection("Tasklet")
         Write-Output "Tasklet Saved"
     }
 }
@@ -161,7 +161,7 @@ function Register-TaskletTouch {
     end {
         if ($AllTasklets){
             foreach ($Index in 0..$($AllTasklets.count-1)) {
-                $AllTasklets[$Index].UpdateDb()
+                $AllTasklets[$Index].UpdateCollection("tasklet")
             }
             $AllTasklets
         }
@@ -185,7 +185,7 @@ function Complete-Tasklet {
     begin{}
     process{
         try{
-            $InputObject.archive()
+            $InputObject.MoveToCollection("tasklet_archive")
             Write-Output "Tasklet [$($InputObject.title)] Completed"
         }
         catch {
@@ -206,9 +206,40 @@ function New-RewardLet {
         $Rewardlet = [rewardlet]::new($Title,$TimeEstimate,$DopamineIndex)
     }
     process {
-        $Rewardlet.AddToDb()
+        $Rewardlet.AddToCollection("rewardlet")
     }
     end {
+        "Rewardlet Created"
+    }
+}
 
+function Add-Rewardlet {
+    [CmdletBinding()]
+    param (
+        
+    )
+    DynamicParam {
+        . $script:LifeTrackerModulePath/Libraries/functions.ps1
+        [Scriptblock]$ConfigValues = {
+            Import-Module PSLiteDB | Out-Null
+            Open-LiteDBConnection $script:DatabaseLocation | Out-Null
+            (Find-LiteDBDocument -Collection "rewardlet").Title
+        }
+        return Get-DynamicParam -ParamName Title -ParamCode $ConfigValues
+    }
+    
+    begin {
+        $Title = $PsBoundParameters['Title']
+        
+        Import-Module PSLiteDB | Out-Null
+        Open-LiteDBConnection $script:DatabaseLocation | Out-Null
+    }
+    process {
+        $Reward = Find-LiteDBDocument -Collection "rewardlet" | Where title -eq $Title
+        $Reward.a
+    }
+    
+    end {
+        Close-LiteDBConnection | Out-Null
     }
 }
