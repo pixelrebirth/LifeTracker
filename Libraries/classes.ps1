@@ -7,7 +7,7 @@ class Base {
 
     [void] UpdateCollection ($Collection) {
         $this.UpdatedOn = (Get-Date).Ticks
-        
+
         Open-LiteDBConnection $this.DbPath
         $this | ConvertTo-LiteDbBSON | Update-LiteDBDocument -Collection $Collection | Out-Null
         Close-LiteDBConnection
@@ -71,7 +71,7 @@ class Rewardlet : Base {
 
     Rewardlet ($Document) {
         $this.Title = $Document.Title
-        $this._id = $Document._id
+        $this._id = (new-guid).guid
         $this.UpdatedOn = (Get-Date).Ticks
     }
 }

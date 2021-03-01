@@ -224,6 +224,7 @@ function Add-Rewardlet {
             Import-Module PSLiteDB | Out-Null
             Open-LiteDBConnection $script:DatabaseLocation | Out-Null
             (Find-LiteDBDocument -Collection "rewardlet").Title
+            Close-LiteDBConnection | Out-Null
         }
         return Get-DynamicParam -ParamName Title -ParamCode $ConfigValues
     }
@@ -236,7 +237,34 @@ function Add-Rewardlet {
     }
     process {
         $Reward = Find-LiteDBDocument -Collection "rewardlet" | Where title -eq $Title
-        $Reward.a
+        $Transaction = [rewardlet]::new($Reward)
+        Close-LiteDBConnection | Out-Null
+    }
+    
+    end {
+        try {
+            $Transaction.AddToCollection("rewardlet_transaction")
+        }
+        catch {
+            throw "Failed to update rewardlet_transaction"
+        }
+        "Rewardlet Registered as Taken"
+    }
+}
+
+function Get-RewardletTransaction {
+    [CmdletBinding()]
+    param (
+        
+    )
+    
+    begin {
+        Import-Module PSLiteDB | Out-Null
+        Open-LiteDBConnection $script:DatabaseLocation | Out-Null
+    }
+    
+    process {
+        Find-LiteDBDocument -Collection "rewardlet_transaction"
     }
     
     end {

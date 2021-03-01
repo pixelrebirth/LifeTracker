@@ -44,8 +44,14 @@ describe "LifeTracker" {
     }
 
     it "Should upload a new rewardlet" {
-        New-Rewardlet -title "Testing Things" -TimeEstimate 8 -DopamineIndex 3 | should -Be "Rewardlet Created"
+        New-Rewardlet -Title "Testing Reward" -TimeEstimate 8 -DopamineIndex 3 | should -Be "Rewardlet Created"
     }
 
-    it "Should Add-Rewardlet to the transaction database" {}
+    it "Should Add-Rewardlet to the transaction database" {
+        Add-Rewardlet -Title "Testing Reward" | Should -Be "Rewardlet Registered as Taken"
+    }
+
+    it "Should be able to pull a list of rewardlet transactions" {
+        (Get-RewardletTransaction)[0].title | should -Be "Testing Reward"
+    }
 }
