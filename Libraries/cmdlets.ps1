@@ -241,7 +241,7 @@ function Add-Rewardlet {
         Close-LiteDBConnection | Out-Null
 
         $IncreaseTaskRequirement = ($PossibleRewards | Where title -eq $Title).TaskRequirement * .05 #percentage increase, to config?
-        $DecreaseTaskRequirement = $IncreaseTaskRequirement / $PossibleRewards.count
+        $DecreaseTaskRequirement = $IncreaseTaskRequirement / ($PossibleRewards.count-1)
 
         foreach ($Reward in $PossibleRewards) {
             if ($Reward.Title -eq $Title){

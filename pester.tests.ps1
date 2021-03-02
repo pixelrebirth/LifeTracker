@@ -57,6 +57,9 @@ describe "LifeTracker" {
         ($Rewardlets).title | Should -Be "Testing Reward"
         ($Rewardlets).TaskRequirement | Should -Be 105
 
+        $Rewardlets = Get-Rewardlet | Where Title -eq "More Testing"
+        ($Rewardlets).title | Should -Be "More Testing"
+        ($Rewardlets).TaskRequirement | Should -Be 95
     }
 
     it "Should be able to pull a list of rewardlet transactions" {
