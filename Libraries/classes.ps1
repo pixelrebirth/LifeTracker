@@ -44,7 +44,7 @@ class Tasklet : Base {
     Tasklet ($Title,$Value) {
         $this.title = $title
         $this.Value = $value
-        $this._id = (new-guid).guid
+        $this._id = (New-Guid).guid
         $this.UpdatedOn = (Get-Date).Ticks
     }
 
@@ -71,8 +71,12 @@ class Rewardlet : Base {
 
     Rewardlet ($Document) {
         $this.Title = $Document.Title
-        $this._id = (new-guid).guid
+        $this._id = $Document._id
         $this.UpdatedOn = (Get-Date).Ticks
+        $this.TimeEstimate = $Document.TimeEstimate
+        $this.DopamineIndex = $Document.DopamineIndex
+        $this.TaskRequirement = $Document.TaskRequirement
+
     }
 }
 

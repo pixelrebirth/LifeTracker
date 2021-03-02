@@ -69,7 +69,17 @@ Copyright = '(c) Kelcey. All rights reserved.'
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('Add-Tasklet','Get-Tasklet','New-TaskletDatabase','Register-TaskletTouch','Complete-Tasklet')
+FunctionsToExport = @(
+    'Add-Tasklet',
+    'Get-Tasklet',
+    'New-TaskletDatabase',
+    'Register-TaskletTouch',
+    'Complete-Tasklet',
+    'Add-Rewardlet',
+    'New-Rewardlet',
+    "Get-Rewardlet",
+    'Get-RewardletTransaction'
+)
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

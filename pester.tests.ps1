@@ -44,6 +44,7 @@ describe "LifeTracker" {
     }
 
     it "Should upload a new rewardlet" {
+        New-Rewardlet -Title "More Testing" -TimeEstimate 5 -DopamineIndex 1 | should -Be "Rewardlet Created"
         New-Rewardlet -Title "Testing Reward" -TimeEstimate 8 -DopamineIndex 3 | should -Be "Rewardlet Created"
     }
 
@@ -51,7 +52,17 @@ describe "LifeTracker" {
         Add-Rewardlet -Title "Testing Reward" | Should -Be "Rewardlet Registered as Taken"
     }
 
+    it "Should be able to pull an available rewarlet" {
+        $Rewardlets = Get-Rewardlet | Where Title -eq "Testing Reward"
+        ($Rewardlets).title | Should -Be "Testing Reward"
+        ($Rewardlets).TaskRequirement | Should -Be 105
+
+    }
+
     it "Should be able to pull a list of rewardlet transactions" {
-        (Get-RewardletTransaction)[0].title | should -Be "Testing Reward"
+        $Transaction = Get-RewardletTransaction
+        $Transaction[0].TimeEstimate | should -Be 8
+        $Transaction[0].DopamineIndex | should -Be 3
+        $Transaction[0].title | should -Be "Testing Reward"
     }
 }
