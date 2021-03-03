@@ -40,5 +40,33 @@ function Request-LifeTrackerConfig {
     $script:Values = ($Tasklets.value | sort -unique).tolower()
     $script:Tags = ($Tasklets.tags | sort -unique).tolower()
     
-    $script:Character = Get-Character
+    Close-LiteDBConnection | Out-Null
+}
+
+function Add-LifeTrackerTransaction {
+    [CmdletBinding()]
+    param (
+        [parameter(Mandatory=$true)]$TaskToken,
+        [parameter(Mandatory=$true)]$WillpowerToken,
+        [parameter(Mandatory=$true)]$ChronoToken,
+        $Path = $script:DatabaseLocation        
+    )
+    
+    begin {
+        Import-Module PSLiteDB | Out-Null
+        Open-LiteDBConnection -Path $Path | Out-Null
+    }
+    
+    process {
+        $Data = [PSCustomObject]@{
+            WillpowerToken    = [int]$WillpowerToken
+            ChronoToken       = [int]$ChronoToken
+            TaskToken         = [int]$TaskToken
+        }
+        $Data | ConvertTo-LiteDbBSON | Add-LiteDBDocument -Collection "token_transaction"
+    }
+    
+    end {
+        Close-LiteDBConnection | Out-Null
+    }
 }

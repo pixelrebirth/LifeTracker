@@ -76,7 +76,6 @@ class Rewardlet : Base {
         $this.TimeEstimate = $Document.TimeEstimate
         $this.DopamineIndex = $Document.DopamineIndex
         $this.TaskRequirement = $Document.TaskRequirement
-
     }
 }
 

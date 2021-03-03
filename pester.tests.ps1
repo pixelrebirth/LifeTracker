@@ -53,13 +53,13 @@ describe "LifeTracker" {
     }
 
     it "Should be able to pull an available rewarlet" {
-        $Rewardlets = Get-Rewardlet | Where Title -eq "Testing Reward"
-        ($Rewardlets).title | Should -Be "Testing Reward"
-        ($Rewardlets).TaskRequirement | Should -Be 105
+        $Rewardlet = Get-Rewardlet | Where Title -eq "Testing Reward"
+        ($Rewardlet).title | Should -Be "Testing Reward"
+        ($Rewardlet).TaskRequirement | Should -Be 105
 
-        $Rewardlets = Get-Rewardlet | Where Title -eq "More Testing"
-        ($Rewardlets).title | Should -Be "More Testing"
-        ($Rewardlets).TaskRequirement | Should -Be 95
+        $Rewardlet = Get-Rewardlet | Where Title -eq "More Testing"
+        ($Rewardlet).title | Should -Be "More Testing"
+        ($Rewardlet).TaskRequirement | Should -Be 95
     }
 
     it "Should be able to pull a list of rewardlet transactions" {
@@ -67,5 +67,12 @@ describe "LifeTracker" {
         $Transaction[0].TimeEstimate | should -Be 8
         $Transaction[0].DopamineIndex | should -Be 3
         $Transaction[0].title | should -Be "Testing Reward"
+    }
+
+    it "Should output a transaction log with Get-LifetrackerTransaction" {
+        $Transactions = Get-LifeTrackerTransaction
+        ($Transactions.ChronoToken | Measure-Object -Sum).sum | Should -Be -2
+        ($Transactions.TaskToken | Measure-Object -Sum).sum | Should -Be -55
+        ($Transactions.WillpowerToken | Measure-Object -Sum).sum | Should -Be 4
     }
 }

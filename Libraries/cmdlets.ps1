@@ -20,6 +20,7 @@ function Add-Tasklet {
     }
     End {
         $Tasklet.AddToCollection("Tasklet")
+        Add-LifeTrackerTransaction -ChronoToken 3 -WillpowerToken 0 -TaskToken 0
         Write-Output "Tasklet Saved"
     }
 }
@@ -164,6 +165,7 @@ function Register-TaskletTouch {
                 $AllTasklets[$Index].UpdateCollection("tasklet")
             }
             $AllTasklets
+            Add-LifeTrackerTransaction -ChronoToken 0 -WillpowerToken 3 -TaskToken 0
         }
         else {"No Tasklets Found"}
     }
@@ -193,7 +195,9 @@ function Complete-Tasklet {
             Close-LiteDBConnection | Out-Null
         }
     }
-    end{}
+    end{
+        Add-LifeTrackerTransaction -ChronoToken 0 -WillpowerToken 0 -TaskToken $InputObject.weight
+    }
 }
 
 function New-Rewardlet {
@@ -211,6 +215,7 @@ function New-Rewardlet {
     }
     end {
         "Rewardlet Created"
+        Add-LifeTrackerTransaction -ChronoToken 0 -WillpowerToken 2 -TaskToken 0
     }
 }
 
@@ -265,6 +270,7 @@ function Add-Rewardlet {
         catch {
             throw "Failed to update rewardlet_transaction"
         }
+        Add-LifeTrackerTransaction -ChronoToken $(-$Transaction.TimeEstimate) -WillpowerToken $(-$Transaction.DopamineIndex) -TaskToken $(-$Transaction.TaskRequirement)
         "Rewardlet Registered as Taken"
     }
 }
@@ -336,5 +342,26 @@ function Get-Rewardlet {
         else {
             "No Rewardlet Found"
         }
+    }
+}
+
+function Get-LifeTrackerTransaction {
+    [CmdletBinding()]
+    param (
+        
+    )
+    
+    begin {
+        Import-Module PSLiteDB | Out-Null
+        Open-LiteDBConnection $script:DatabaseLocation | Out-Null
+    }
+    
+    process {
+        $Output = Find-LiteDBDocument -Collection "token_transaction"
+    }
+    
+    end {
+        Close-LiteDBConnection | Out-Null
+        $Output
     }
 }
