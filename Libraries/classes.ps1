@@ -1,9 +1,11 @@
 class Base {
     [ValidateLength(5,40)]$Title
     [guid]$_id = (New-Guid).guid
-    $DbPath = $script:DatabaseLocation
     [long]$CreatedOn = (Get-Date).Ticks
     [long]$UpdatedOn
+    $Tags
+    $DbPath = $script:DatabaseLocation
+
 
     [void] UpdateCollection ($Collection) {
         $this.UpdatedOn = (Get-Date).Ticks
@@ -37,7 +39,6 @@ class Base {
 
 class Tasklet : Base {
     [double]$Weight = 50
-    $Tags
     $Value
     
 
@@ -61,7 +62,7 @@ class Tasklet : Base {
 class Rewardlet : Base {
     [ValidateSet(1,2,3,5,8,13)]$TimeEstimate
     [ValidateSet(1,2,3,5,8,13)]$DopamineIndex
-    $TaskRequirement = 100
+    $TaskRequirement = 50
 
     Rewardlet ($Title,$TimeEstimate,$DopamineIndex) {
         $this.Title = $Title
@@ -89,19 +90,17 @@ class Journlet : Base {
 }
 
 class Habitlet : Base {
-    $Body
-
-    Habitlet ($Title,$Body) {
+    Habitlet ($Title) {
         $this.Title = $Title
-        $this.Body = $Body
     }
 }
 
 class Timelet : Base {
-    $Body
-
-    Timelet ($Title,$Body) {
+    Timelet ($Title,$Tags) {
         $this.Title = $Title
-        $this.Body = $Body
+        $this.Tags = $Tags
+    }
+    Timelet ($Document) {
+        $this.Title = $Document.Title
     }
 }

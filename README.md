@@ -189,6 +189,7 @@ Id like to get the core pieces done and get rewards to work but in context of fu
 
 Master level distributes to characters like MTG? 
 
+Analytics to do standard deviation of daily change to identify when I am on a strong or weak streak for alerting. This could be rewards taken vs data input where 0 is completely balanced, too many rewards is not enough work, too many tasks means under utilization of the reward system. This can be a 7 day rolling analytic and can be tied into notifications 
 # Game Loop
 Area 10 start
     Do tasks to increase Dharma and Tokens
@@ -202,3 +203,31 @@ Area 10 start
     or
 
     Regress Level because Boss beat you
+
+
+# Timelet
+[A 15 minute chunk of documented time]
+Pull from previous items
+Rewardlet style logging of information
+New-
+Add-
+
+# Habitlet
+[Positive or Negative Habits like Drinking Water, Exercise, Biting Nails]
+Give Dharma everytime, grant tokens on positive, do nothing on negative
+Analysis capable
+Rewardlet style logging of information
+
+# Journlet
+[Journal Entries from life and work and love]
+Transaction only database
+Tokens on completion
+
+# PlayerStats
+[Build a Character Off of the Data]
+Attack on taking rewards?
+See above documentation on what that all means
+
+# ConsolidateData
+[Reduce Transaction Table by Summing All Columns and Rebuilding the Table]
+OnMeasureCommand > 2000 milliseconds OR on >1000 records

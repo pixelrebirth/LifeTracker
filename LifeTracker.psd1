@@ -72,14 +72,17 @@ Copyright = '(c) Kelcey. All rights reserved.'
 FunctionsToExport = @(
     'Add-Tasklet',
     'Get-Tasklet',
-    'New-TaskletDatabase',
-    'Register-TaskletTouch',
     'Complete-Tasklet',
-    'Add-Rewardlet',
+    'Register-TaskletTouch',
     'New-Rewardlet',
     "Get-Rewardlet",
+    'Add-Rewardlet',
     'Get-RewardletTransaction',
-    'Get-LifeTrackerTransaction'
+    'New-Timelet',
+    "Get-Timelet",
+    'Add-Timelet',
+    'Get-TimeletTransaction',
+    'Get-LifeTracker'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

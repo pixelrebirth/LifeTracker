@@ -4,7 +4,11 @@ properties {
     $Message
 }
 
-Task default -depends Commit
+Task default -depends Install
+
+Task Install -Depends Commit {
+    ./Install.ps1
+}
 
 Task Commit -Depends Testing {
     if (!$Message){$Message = "Auto-$((get-date) -replace(" |:|/","-"))"}

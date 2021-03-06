@@ -3,9 +3,8 @@ $script:DatabaseLocation = "./test.db"
 
 describe "LifeTracker" {
     BeforeAll {
-        . $script:LifeTrackerModulePath/Libraries/classes.ps1
-        . $script:LifeTrackerModulePath/Libraries/functions.ps1
-        . $script:LifeTrackerModulePath/Libraries/cmdlets.ps1
+        $AllFiles = Get-ChildItem -Path "$script:LifeTrackerModulePath/Libraries/*.ps1" -Recurse -Exclude *.tests.*,RunPester.ps1
+        $AllFiles | ForEach {. $Input}
     
         Import-Module PSLiteDB
     }
@@ -15,9 +14,9 @@ describe "LifeTracker" {
         New-TaskletDatabase | Should -BeTrue
     }
 
-    it "Add-Tasklet uploads a document to DB" {
-        Add-Tasklet -Value "Leadership" -Title "Another Tasklet" -Tags "Test,123"| Should -Be "Tasklet Saved"
-        Add-Tasklet -Value "Systemic" -Title "Testing 123" | Should -Be "Tasklet Saved"
+    it "New-Tasklet uploads a document to DB" {
+        New-Tasklet -Value "Leadership" -Title "Another Tasklet" -Tags "Test,123" | Should -Be "Tasklet Saved"
+        New-Tasklet -Value "Systemic" -Title "Testing 123" -Tags "123" | Should -Be "Tasklet Saved"
     }
     
     it "Get-Tasklet returns created tasklet" {
@@ -55,11 +54,11 @@ describe "LifeTracker" {
     it "Should be able to pull an available rewarlet" {
         $Rewardlet = Get-Rewardlet | Where Title -eq "Testing Reward"
         ($Rewardlet).title | Should -Be "Testing Reward"
-        ($Rewardlet).TaskRequirement | Should -Be 105
+        ($Rewardlet).TaskRequirement | Should -Be 52.5
 
         $Rewardlet = Get-Rewardlet | Where Title -eq "More Testing"
         ($Rewardlet).title | Should -Be "More Testing"
-        ($Rewardlet).TaskRequirement | Should -Be 95
+        ($Rewardlet).TaskRequirement | Should -Be 47.5
     }
 
     it "Should be able to pull a list of rewardlet transactions" {
@@ -68,11 +67,33 @@ describe "LifeTracker" {
         $Transaction[0].DopamineIndex | should -Be 3
         $Transaction[0].title | should -Be "Testing Reward"
     }
+    
+    it "Should upload a New-Timelet" {
+        New-Timelet -Title "Time Registry" -Tags "Testing" | should -Be "Timelet Created"
+        New-Timelet -Title "Time Check" -Tags "Testing" | should -Be "Timelet Created"
+    }
+
+    it "Should Add-Timelet to the transaction database" {
+        Add-Timelet -Title "Time Check" | Should -Be "Timelet Registered as Taken"
+    }
+
+    it "Should be able to pull an available timelet" {
+        (Get-Timelet | Where Title -eq "Time Check").Title | Should -Be "Time Check"
+        (Get-Timelet | Where Title -eq "Time Registry").Title| Should -Be "Time Registry"
+    }
+
+    it "Should be able to pull a list of timelet transactions" {
+        (Get-TimeletTransaction | Where Title -eq "Time Check").Title | should -Be "Time Check"
+    }
 
     it "Should output a transaction log with Get-LifetrackerTransaction" {
-        $Transactions = Get-LifeTrackerTransaction
-        ($Transactions.ChronoToken | Measure-Object -Sum).sum | Should -Be -2
-        ($Transactions.TaskToken | Measure-Object -Sum).sum | Should -Be -55
+        $Transactions = Get-LifeTracker
+        ($Transactions.ChronoToken | Measure-Object -Sum).sum | Should -Be 2
+        ($Transactions.TaskToken | Measure-Object -Sum).sum | Should -Be -2
         ($Transactions.WillpowerToken | Measure-Object -Sum).sum | Should -Be 4
+    }
+
+    AfterAll {
+        Remove-Item $script:DatabaseLocation -Force
     }
 }
