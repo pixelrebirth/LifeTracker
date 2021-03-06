@@ -93,6 +93,10 @@ describe "LifeTracker" {
         ($Transactions.WillpowerToken | Measure-Object -Sum).sum | Should -Be 4
     }
 
+    it "Should show sums for Get-LifeTracker" {
+        (Get-LifeTracker -SumOnly).WillpowerToken | Should -Be 4
+    }
+
     AfterAll {
         Remove-Item $script:DatabaseLocation -Force
     }

@@ -22,7 +22,7 @@ function Add-Timelet {
         
     )
     DynamicParam {
-        . $script:LifeTrackerModulePath/Libraries/functions.ps1
+        . $script:LifeTrackerModulePath/Libraries/general.ps1
         [Scriptblock]$ConfigValues = {
             Import-Module PSLiteDB | Out-Null
             Open-LiteDBConnection $script:DatabaseLocation | Out-Null
@@ -39,21 +39,14 @@ function Add-Timelet {
         Open-LiteDBConnection $script:DatabaseLocation | Out-Null
     }
     process {
-        $PossibleRewards = Find-LiteDBDocument -Collection "timelet"
+        $Timelet = Find-LiteDBDocument -Collection "timelet" | Where Title -eq $Title
         Close-LiteDBConnection | Out-Null
 
-        $IncreaseTaskRequirement = ($PossibleRewards | Where title -eq $Title).TaskRequirement * .05 #percentage increase, to config?
-        $DecreaseTaskRequirement = $IncreaseTaskRequirement / ($PossibleRewards.count-1)
-
-        foreach ($Reward in $PossibleRewards) {
-            if ($Reward.Title -eq $Title){
-                $Transaction = [timelet]::new($Reward)
-                $Transaction.UpdateCollection("timelet")
-            }
-            else {
-                $ReduceReward = [timelet]::new($Reward)
-                $ReduceReward.UpdateCollection("timelet")
-            }
+        if ($Timelet.count -eq 1){
+            $Transaction = [timelet]::new($Timelet)
+        }
+        else {
+            throw "Too many Timelets returned from query"
         }
     }
     
@@ -97,7 +90,7 @@ function Get-Timelet {
         [switch]$FormatView
     )
     DynamicParam {
-        . $script:LifeTrackerModulePath/Libraries/functions.ps1
+        . $script:LifeTrackerModulePath/Libraries/general.ps1
         [Scriptblock]$ConfigValues = {
             Import-Module PSLiteDB | Out-Null
             Open-LiteDBConnection $script:DatabaseLocation | Out-Null

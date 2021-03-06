@@ -23,7 +23,7 @@ function Add-Rewardlet {
         
     )
     DynamicParam {
-        . $script:LifeTrackerModulePath/Libraries/functions.ps1
+        . $script:LifeTrackerModulePath/Libraries/general.ps1
         [Scriptblock]$ConfigValues = {
             Import-Module PSLiteDB | Out-Null
             Open-LiteDBConnection $script:DatabaseLocation | Out-Null
@@ -100,7 +100,7 @@ function Get-Rewardlet {
         [switch]$FormatView
     )
     DynamicParam {
-        . $script:LifeTrackerModulePath/Libraries/functions.ps1
+        . $script:LifeTrackerModulePath/Libraries/general.ps1
         [Scriptblock]$ConfigValues = {
             Import-Module PSLiteDB | Out-Null
             Open-LiteDBConnection $script:DatabaseLocation | Out-Null
