@@ -97,6 +97,20 @@ describe "LifeTracker" {
         (Get-LifeTracker -SumOnly).WillpowerToken | Should -Be 4
     }
 
+    it "Should upload a New-Habitlet" {
+        New-Habitlet -Title "Habit Registry" -Tags "Testing" | should -Be "Habitlet Created"
+        New-Habitlet -Title "Habit Check" -Tags "Testing" | should -Be "Habitlet Created"
+    }
+
+    it "Should Add-Habitlet to the transaction database" {
+        Add-Habitlet -Title "Habit Check" | Should -Be "Habitlet Registered as Taken"
+    }
+
+    it "Should be able to pull an available Habitlet" {
+        (Get-Habitlet | Where Title -eq "Habit Check").Title | Should -Be "Habit Check"
+        (Get-Habitlet | Where Title -eq "Habit Registry").Title| Should -Be "Habit Registry"
+    }
+
     AfterAll {
         Remove-Item $script:DatabaseLocation -Force
     }

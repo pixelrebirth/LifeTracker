@@ -90,8 +90,13 @@ class Journlet : Base {
 }
 
 class Habitlet : Base {
-    Habitlet ($Title) {
+    Habitlet ($Title,$Tags) {
         $this.Title = $Title
+        $this.Tags = $Tags
+    }
+    Habitlet ($Document) {
+        $this.Title = $Document.Title
+        $this.Tags = $Document.Tags
     }
 }
 
@@ -102,5 +107,6 @@ class Timelet : Base {
     }
     Timelet ($Document) {
         $this.Title = $Document.Title
+        $this.Tags = $Document.Tags
     }
 }
