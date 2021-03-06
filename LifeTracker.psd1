@@ -82,6 +82,10 @@ FunctionsToExport = @(
     "Get-Timelet",
     'Add-Timelet',
     'Get-TimeletTransaction',
+    'New-Habitlet',
+    "Get-Habitlet",
+    'Add-Habitlet',
+    'Get-HabitletTransaction',
     'Get-LifeTracker'
 )
 

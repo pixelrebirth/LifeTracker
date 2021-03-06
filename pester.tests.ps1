@@ -86,13 +86,6 @@ describe "LifeTracker" {
         (Get-TimeletTransaction | Where Title -eq "Time Check").Title | should -Be "Time Check"
     }
 
-    it "Should output a transaction log with Get-LifetrackerTransaction" {
-        $Transactions = Get-LifeTracker
-        ($Transactions.ChronoToken | Measure-Object -Sum).sum | Should -Be 2
-        ($Transactions.TaskToken | Measure-Object -Sum).sum | Should -Be -2
-        ($Transactions.WillpowerToken | Measure-Object -Sum).sum | Should -Be 4
-    }
-
     it "Should show sums for Get-LifeTracker" {
         (Get-LifeTracker -SumOnly).WillpowerToken | Should -Be 4
     }
@@ -109,6 +102,13 @@ describe "LifeTracker" {
     it "Should be able to pull an available Habitlet" {
         (Get-Habitlet | Where Title -eq "Habit Check").Title | Should -Be "Habit Check"
         (Get-Habitlet | Where Title -eq "Habit Registry").Title| Should -Be "Habit Registry"
+    }
+
+    it "Should output a transaction log with Get-LifetrackerTransaction" {
+        $Transactions = Get-LifeTracker -SumOnly
+        $Transactions.ChronoToken| Should -Be 2
+        $Transactions.TaskToken | Should -Be 13
+        $Transactions.WillpowerToken| Should -Be 20
     }
 
     AfterAll {
