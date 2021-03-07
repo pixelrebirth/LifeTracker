@@ -71,6 +71,7 @@ Copyright = '(c) Kelcey. All rights reserved.'
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
     'New-TaskletDatabase',
+    'New-Tasklet',
     'Add-Tasklet',
     'Get-Tasklet',
     'Complete-Tasklet',
