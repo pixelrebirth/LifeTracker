@@ -28,7 +28,7 @@ function Get-LifeTracker {
 }
 
 function Get-DynamicParam {
-    Param ([array]$ParamName,[array]$ParamCode)
+    Param ([array]$ParamName,[array]$ParamCode,[switch]$Validate)
 
     $Count = 0
     $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
@@ -43,9 +43,11 @@ function Get-DynamicParam {
         $ParameterAttribute = New-Object System.Management.Automation.ParameterAttribute
         $AttributeCollection.Add($ParameterAttribute)
 
-        $arrSet = . $Scriptblock
-        $ValidateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute($arrSet)
-        $AttributeCollection.Add($ValidateSetAttribute)
+        if (!$Validate){
+            $arrSet = . $Scriptblock
+            $ValidateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute($arrSet)
+            $AttributeCollection.Add($ValidateSetAttribute)
+        }
 
         $RuntimeParameter = New-Object System.Management.Automation.RuntimeDefinedParameter($ParameterName, [string], $AttributeCollection)
         $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)

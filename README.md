@@ -190,6 +190,14 @@ Id like to get the core pieces done and get rewards to work but in context of fu
 Master level distributes to characters like MTG? 
 
 Analytics to do standard deviation of daily change to identify when I am on a strong or weak streak for alerting. This could be rewards taken vs data input where 0 is completely balanced, too many rewards is not enough work, too many tasks means under utilization of the reward system. This can be a 7 day rolling analytic and can be tied into notifications 
+
+Embrace fibonacci and do math tests for how far in sequence before 5 minutes or 1 error occurs, you could also do multiples of 2 or 3 the same way
+
+The ability to see patterns is a monumental difference between intelligent and non-intelligent analysis. This is to be proven.
+
+Devops is about certain skills, packer, terraform, ansible, etc working in concert. In a new position of leadership I am going to offer everyone the list and have them choose, let them learn it in their own context. A tiger team is important as a target for people to get to. But everyone should be accountable for a single automation related yearly for review, no matter what level of IT--- automation is about saving our ass.
+
+Timer happening ever 15th minute of the hour to see if you have added any timelets, penalty/reminders for missing it
 # Game Loop
 Area 10 start
     Do tasks to increase Dharma and Tokens
