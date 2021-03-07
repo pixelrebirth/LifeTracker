@@ -111,6 +111,15 @@ describe "LifeTracker" {
         $Transactions.WillpowerToken| Should -Be 20
     }
 
+    it "Should Add-Journlet to the transaction database" {
+        mock Read-Host {"This is a journal entry."}
+        Add-Journlet -Title "Journal Entry" -Tags "Test,123" | Should -Be "Journlet Registered as Taken"
+    }
+
+    it "Should be able to pull an available Journlet" {
+        (Get-Journlet | Where Title -eq "Journal Entry").Title | Should -Be "Journal Entry"
+    }
+
     AfterAll {
         Remove-Item $script:DatabaseLocation -Force
     }

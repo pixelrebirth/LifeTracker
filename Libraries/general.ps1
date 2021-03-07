@@ -43,7 +43,7 @@ function Get-DynamicParam {
         $ParameterAttribute = New-Object System.Management.Automation.ParameterAttribute
         $AttributeCollection.Add($ParameterAttribute)
 
-        if (!$Validate){
+        if ($Validate){
             $arrSet = . $Scriptblock
             $ValidateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute($arrSet)
             $AttributeCollection.Add($ValidateSetAttribute)

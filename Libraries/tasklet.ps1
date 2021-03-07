@@ -11,11 +11,12 @@ function New-Tasklet {
     }
     Begin{
         $Value = $PsBoundParameters['Value']
+        $Tags = @($Tags.split(','))
     }
     Process {
-        $Tasklet = [Tasklet]::new($Title,$Value)
-        if ($Tags){
-            $Tasklet.tags = @($Tags.split(','))
+        $Tasklet = [Tasklet]::new($Title,$Tags)
+        if ($Value){
+            $Tasklet.Value = $Value
         }
     }
     End {

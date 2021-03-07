@@ -42,9 +42,9 @@ class Tasklet : Base {
     $Value
     
 
-    Tasklet ($Title,$Value) {
+    Tasklet ($Title,$Tags) {
         $this.title = $title
-        $this.Value = $value
+        $this.Tags = $Tags
         $this._id = (New-Guid).guid
         $this.UpdatedOn = (Get-Date).Ticks
     }
@@ -83,9 +83,9 @@ class Rewardlet : Base {
 class Journlet : Base {
     $Body
 
-    Journlet ($Title,$Body) {
+    Journlet ($Title,$Tags) {
         $this.Title = $Title
-        $this.Body = $Body
+        $this.Tags = $Tags
     }
 }
 

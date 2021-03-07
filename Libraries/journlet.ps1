@@ -1,42 +1,28 @@
 function Add-Journlet {
     [CmdletBinding()]
     param (
-        
+        $Title,
+        $Tags
     )
-    DynamicParam {
-        . $script:LifeTrackerModulePath/Libraries/general.ps1
-        [Scriptblock]$ConfigValues = {
-            Import-Module PSLiteDB | Out-Null
-            Open-LiteDBConnection $script:DatabaseLocation | Out-Null
-            (Find-LiteDBDocument -Collection "journlet").Title
-            Close-LiteDBConnection | Out-Null
-        }
-        return Get-DynamicParam -ParamName Title -ParamCode $ConfigValues
-    }
     
     begin {
-        $Title = $PsBoundParameters['Title']
-        
         Import-Module PSLiteDB | Out-Null
+        $Tags = @($Tags.split(','))
     }
     process {
-        if ($Journlet.count -eq 1){
-            $Transaction = [Journlet]::new($Journlet)
-        }
-        else {
-            throw "Too many  returned from query"
-        }
+        $Body = Read-Host "What do you need to talk about today"
+        $Transaction = [Journlet]::new($Title,$Tags)
+        $Transaction.Body = $Body
     }
     
     end {
         try {
-            $Transaction._id = (New-Guid).Guid
             $Transaction.AddToCollection("journlet_transaction")
         }
         catch {
             throw "Failed to update journlet_transaction"
         }
-        Add-LifeTrackerTransaction -ChronoToken 0 -WillpowerToken 0 -TaskToken 15
+        Add-LifeTrackerTransaction -ChronoToken 5 -WillpowerToken 0 -TaskToken ($Body.length / 5)
         "Journlet Registered as Taken"
     }
 }
