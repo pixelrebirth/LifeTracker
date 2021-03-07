@@ -44,6 +44,7 @@ function Get-Journlet {
     
     end {
         Close-LiteDBConnection | Out-Null
-        $Output
+        if ($Output) {$Output}
+        else {"No Journlet Found"}
     }
 }
