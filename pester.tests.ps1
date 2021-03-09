@@ -20,8 +20,8 @@ describe "LifeTracker" {
     }
     
     it "Get-Tasklet returns created tasklet" {
-        (Get-Tasklet -FormatView -Tags "Test").title | Should -Be "Another Tasklet"
-        (Get-Tasklet -Value "Systemic").title | Should -Be "Testing 123"
+        (Get-Tasklet -FormatView -Tags "Test").Title | Should -Be "Another Tasklet"
+        (Get-Tasklet -Value "Systemic").Title | Should -Be "Testing 123"
     }
 
     it "Register-TaskletTouch allocates 50 to Priority when Read-Host is 3" {
@@ -43,8 +43,8 @@ describe "LifeTracker" {
     }
 
     it "Should upload a new rewardlet" {
-        New-Rewardlet -Title "More Testing" -TimeEstimate 5 -DopamineIndex 1 -TaskRequirement 13 | should -Be "Rewardlet Created"
-        New-Rewardlet -Title "Testing Reward" -TimeEstimate 8 -DopamineIndex 3 -TaskRequirement 8 | should -Be "Rewardlet Created"
+        New-Rewardlet -Title "More Testing" -TimeEstimate 5 -DopamineIndex 5 -TaskRequirement 5 | should -Be "Rewardlet Created"
+        New-Rewardlet -Title "Testing Reward" -TimeEstimate 8 -DopamineIndex 8 -TaskRequirement 8 | should -Be "Rewardlet Created"
     }
 
     it "Should Add-Rewardlet to the transaction database" {
@@ -53,19 +53,19 @@ describe "LifeTracker" {
 
     it "Should be able to pull an available rewarlet" {
         $Rewardlet = Get-Rewardlet | Where Title -eq "Testing Reward"
-        ($Rewardlet).title | Should -Be "Testing Reward"
+        ($Rewardlet).Title | Should -Be "Testing Reward"
         ($Rewardlet).TaskRequirement | Should -Be 8
 
         $Rewardlet = Get-Rewardlet | Where Title -eq "More Testing"
-        ($Rewardlet).title | Should -Be "More Testing"
-        ($Rewardlet).TaskRequirement | Should -Be 13
+        ($Rewardlet).Title | Should -Be "More Testing"
+        ($Rewardlet).TaskRequirement | Should -Be 5
     }
 
     it "Should be able to pull a list of rewardlet transactions" {
-        $Transaction = Get-RewardletTransaction
-        $Transaction[0].TimeEstimate | should -Be 8
-        $Transaction[0].DopamineIndex | should -Be 3
-        $Transaction[0].title | should -Be "Testing Reward"
+        $Transaction = Get-RewardletTransaction | Where Title -eq "Testing Reward"
+        $Transaction.TimeEstimate | should -Be 8
+        $Transaction.DopamineIndex | should -Be 8
+        $Transaction.Title | should -Be "Testing Reward"
     }
     
     it "Should upload a New-Timelet" {
@@ -87,7 +87,7 @@ describe "LifeTracker" {
     }
 
     it "Should show sums for Get-LifeTracker" {
-        (Get-LifeTracker -SumOnly).WillpowerToken | Should -Be 32
+        (Get-LifeTracker -SumOnly).WillpowerToken | Should -Be 4
     }
 
     it "Should upload a New-Habitlet" {
@@ -106,9 +106,9 @@ describe "LifeTracker" {
 
     it "Should output a transaction log with Get-LifetrackerTransaction" {
         $Transactions = Get-LifeTracker -SumOnly
-        $Transactions.ChronoToken| Should -Be 33
-        $Transactions.TaskToken | Should -Be 40
-        $Transactions.WillpowerToken| Should -Be 45
+        $Transactions.ChronoToken| Should -Be 7
+        $Transactions.TaskToken | Should -Be 18
+        $Transactions.WillpowerToken| Should -Be 11
     }
 
     it "Should Add-Journlet to the transaction database" {

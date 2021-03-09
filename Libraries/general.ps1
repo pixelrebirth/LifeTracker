@@ -63,6 +63,9 @@ function Get-LifeTrackerConfig {
 function Add-LifeTrackerTransaction {
     [CmdletBinding()]
     param (
+        $TaskToken,
+        $WillpowerToken,
+        $ChronoToken,
         $FunctionName,
         $Path = $script:DatabaseLocation        
     )
@@ -71,14 +74,25 @@ function Add-LifeTrackerTransaction {
         Import-Module PSLiteDB | Out-Null
         Open-LiteDBConnection -Path $Path | Out-Null
         $Config = Get-LifeTrackerConfig
-        $TransactionValues = $Config.TransactionValues.$FunctionName.split(';')
+        if ($FunctionName) {
+            $TransactionValues = $Config.TransactionValues.$FunctionName.split(';')
+        }
     }
     
     process {
-        $Data = [PSCustomObject]@{
-            WillpowerToken    = $TransactionValues[0]
-            ChronoToken       = $TransactionValues[1]
-            TaskToken         = $TransactionValues[2]
+        if ($FunctionName) {
+            $Data = [PSCustomObject]@{
+                WillpowerToken    = $TransactionValues[0]
+                ChronoToken       = $TransactionValues[1]
+                TaskToken         = $TransactionValues[2]
+            }
+        }
+        else {
+            $Data = [PSCustomObject]@{
+                WillpowerToken    = [int]$WillpowerToken
+                ChronoToken       = [int]$ChronoToken
+                TaskToken         = [int]$TaskToken
+            }
         }
         $Data | ConvertTo-LiteDbBSON | Add-LiteDBDocument -Collection "token_transaction"
     }

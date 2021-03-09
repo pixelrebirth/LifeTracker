@@ -1,14 +1,14 @@
 {
    "TransactionValues": {
-        "New-Tasklet":              "2;1;3",
-        "Complete-Tasklet":         "1;3;8",
-        "Register-TaskletTouch":    "3;5;1",
-        "New-Rewardlet":            "5;3;1",
-        "Add-Rewardlet":            "2;3;3",
-        "New-Timelet":              "5;2;3",
-        "Add-Timelet":              "2;5;3",
-        "New-Habitlet":             "5;1;3",
-        "Add-Habitlet":             "3;3;5",
-        "Add-Journlet":             "2;3;5"
+        "New-Tasklet":              "1;1;3",
+        "Complete-Tasklet":         "0;0;5",
+        "Register-TaskletTouch":    "2;0;3",
+        "New-Rewardlet":            "3;2;0",
+        "Add-Rewardlet":            "2;3;0",
+        "New-Timelet":              "0;2;3",
+        "Add-Timelet":              "2;3;0",
+        "New-Habitlet":             "2;0;3",
+        "Add-Habitlet":             "3;2;0",
+        "Add-Journlet":             "2;0;3"
     }
 }

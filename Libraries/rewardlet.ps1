@@ -61,7 +61,8 @@ function Add-Rewardlet {
         catch {
             throw "Failed to update rewardlet_transaction"
         }
-        Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
+        Add-LifeTrackerTransaction -ChronoToken $(-$Transaction.TimeEstimate) -WillpowerToken $(-$Transaction.DopamineIndex) -TaskToken $(-$Transaction.TaskRequirement)
+
         "Rewardlet Registered as Taken"
     }
 }
