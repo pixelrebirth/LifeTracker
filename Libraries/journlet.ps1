@@ -22,7 +22,7 @@ function Add-Journlet {
         catch {
             throw "Failed to update journlet_transaction"
         }
-        Add-LifeTrackerTransaction -ChronoToken 5 -WillpowerToken 0 -TaskToken ($Body.length / 5)
+        Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
         "Journlet Registered as Taken"
     }
 }

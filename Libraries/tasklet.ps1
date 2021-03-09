@@ -1,12 +1,13 @@
 function New-Tasklet {
     [cmdletbinding()]
     Param (
-        $Title,
-        [parameter(Mandatory=$true)]$Tags
+        [parameter(Mandatory=$true)]$Title,
+        [parameter(Mandatory=$true)]$Tags,
+        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)]$Complexity
     )
     DynamicParam {
         . $script:LifeTrackerModulePath/Libraries/general.ps1
-        [Scriptblock]$ConfigValues = {(Get-TaskletConfig).values}
+        [Scriptblock]$ConfigValues = {(Get-LifeTrackerConfig).values}
         return Get-DynamicParam -ParamName Value -ParamCode $ConfigValues
     }
     Begin{
@@ -14,14 +15,14 @@ function New-Tasklet {
         $Tags = @($Tags.split(','))
     }
     Process {
-        $Tasklet = [Tasklet]::new($Title,$Tags)
+        $Tasklet = [Tasklet]::new($Title,$Tags,$Complexity)
         if ($Value){
             $Tasklet.Value = $Value
         }
     }
     End {
         $Tasklet.AddToCollection("Tasklet")
-        Add-LifeTrackerTransaction -ChronoToken 3 -WillpowerToken 0 -TaskToken 0
+        Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
         Write-Output "Tasklet Saved"
     }
 }
@@ -34,7 +35,7 @@ function Get-Tasklet {
     )
     DynamicParam {
         . $script:LifeTrackerModulePath/Libraries/general.ps1
-        [Scriptblock]$ConfigValues = {(Get-TaskletConfig).values}
+        [Scriptblock]$ConfigValues = {(Get-LifeTrackerConfig).values}
         return Get-DynamicParam -ParamName Value -ParamCode $ConfigValues
     }
 
@@ -62,10 +63,10 @@ function Get-Tasklet {
         Close-LiteDBConnection | Out-Null
         if ($OutputArray){
             if ($FormatView){
-                $OutputArray | Sort Weight -Descending | Select Title,Weight,Value,Tags
+                $OutputArray | Sort Priority -Descending | Select Title,Priority,Value,Tags,Complexity
             }
             else {
-                $OutputArray | Sort Weight -Descending
+                $OutputArray | Sort Priority -Descending
             }
         }
         else {
@@ -81,7 +82,7 @@ function Register-TaskletTouch {
     )
     DynamicParam {
         . $script:LifeTrackerModulePath/Libraries/general.ps1
-        [Scriptblock]$ConfigValues = {(Get-TaskletConfig).values}
+        [Scriptblock]$ConfigValues = {(Get-LifeTrackerConfig).values}
         return Get-DynamicParam -ParamName Value -ParamCode $ConfigValues
     }
 
@@ -98,25 +99,27 @@ function Register-TaskletTouch {
     }
     process {
         if ($AllTasklets){
-            Write-Host -ForegroundColor Yellow "`nPlease enter weight 1-5 or press return`n------"
+            Write-Host -ForegroundColor Yellow "`nPlease enter Priority 0,1,2,3,5,8,13,21,34,55 or press return`n------"
             foreach($Index in 0..$($AllTasklets.count-1)){
                 do {
                     $Title = $AllTasklets[$Index].Title
-                    [int]$Weight  = Read-Host $Title
+                    while ($Priority -notin @(0,1,2,3,5,8,13,21,34,55)){
+                        [int]$Priority  = Read-Host $Title
+                    }
                     if ($AllTasklets.count -gt 1){
-                        $PerTaskletDecrease = $Weight / ($AllTasklets.count-1)
+                        $PerTaskletDecrease = $Priority / ($AllTasklets.count-1)
                     }
                     else {
                         $PerTaskletDecrease = 0
                     }
                 }
                 until (
-                    $Weight -ge 0 -AND $Weight -le 5
+                    $Priority -ge 0 -AND $Priority -le 5
                 )
                 
-                $AllTasklets[$Index].weight += ($Weight + $PerTaskletDecrease)
+                $AllTasklets[$Index].Priority += ($Priority + $PerTaskletDecrease)
                 foreach($Index in 0..$($AllTasklets.count-1)){
-                    $AllTasklets[$Index].weight -= $PerTaskletDecrease
+                    $AllTasklets[$Index].Priority -= $PerTaskletDecrease
                 }
             }
         }
@@ -127,7 +130,7 @@ function Register-TaskletTouch {
                 $AllTasklets[$Index].UpdateCollection("tasklet")
             }
             $AllTasklets
-            Add-LifeTrackerTransaction -ChronoToken 0 -WillpowerToken 3 -TaskToken 0
+            Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
         }
         else {"No Tasklets Found"}
     }
@@ -158,6 +161,6 @@ function Complete-Tasklet {
         }
     }
     end{
-        Add-LifeTrackerTransaction -ChronoToken 0 -WillpowerToken 0 -TaskToken $InputObject.weight
+        Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
     }
 }

@@ -38,13 +38,15 @@ class Base {
 }
 
 class Tasklet : Base {
-    [double]$Weight = 50
+    [double]$Priority = 50
+    $Complexity
     $Value
     
 
-    Tasklet ($Title,$Tags) {
+    Tasklet ($Title,$Tags,$Complexity) {
         $this.title = $title
         $this.Tags = $Tags
+        $this.Complexity = $Complexity
         $this._id = (New-Guid).guid
         $this.UpdatedOn = (Get-Date).Ticks
     }
@@ -52,22 +54,24 @@ class Tasklet : Base {
     Tasklet ($Document) {
         $this.Title = $Document.Title
         $this._id = $Document._id
+        $this.Complexity = $Document.Complexity
         $this.Value = $Document.value
-        $this.Weight = $Document.Weight
+        $this.Priority = $Document.Priority
         $this.Tags = $Document.Tags
         $this.UpdatedOn = (Get-Date).Ticks
     }
 }
 
 class Rewardlet : Base {
-    [ValidateSet(1,2,3,5,8,13)]$TimeEstimate
-    [ValidateSet(1,2,3,5,8,13)]$DopamineIndex
-    $TaskRequirement = 50
+    $TimeEstimate
+    $DopamineIndex
+    $TaskRequirement
 
-    Rewardlet ($Title,$TimeEstimate,$DopamineIndex) {
+    Rewardlet ($Title,$TimeEstimate,$DopamineIndex,$TaskRequirement) {
         $this.Title = $Title
         $this.TimeEstimate = $TimeEstimate
         $this.DopamineIndex = $DopamineIndex
+        $this.TaskRequirement = $TaskRequirement
     }
 
     Rewardlet ($Document) {

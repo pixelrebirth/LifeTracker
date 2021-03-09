@@ -12,7 +12,7 @@ function New-Timelet {
     }
     end {
         "Timelet Created"
-        Add-LifeTrackerTransaction -ChronoToken 2 -WillpowerToken 0 -TaskToken 0
+        Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
     }
 }
 
@@ -58,7 +58,7 @@ function Add-Timelet {
         catch {
             throw "Failed to update timelet_transaction"
         }
-        Add-LifeTrackerTransaction -ChronoToken $(-$Transaction.TimeEstimate) -WillpowerToken $(-$Transaction.DopamineIndex) -TaskToken $(-$Transaction.TaskRequirement)
+        Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
         "Timelet Registered as Taken"
     }
 }
@@ -120,7 +120,7 @@ function Get-Timelet {
     end {
         Close-LiteDBConnection | Out-Null
         if ($OutputArray){
-            $OutputArray | Sort Weight -Descending
+            $OutputArray | Sort Priority -Descending
         }
         else {
             "No Timelet Found"

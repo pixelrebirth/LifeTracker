@@ -12,7 +12,7 @@ function New-Habitlet {
     }
     end {
         "Habitlet Created"
-        Add-LifeTrackerTransaction -ChronoToken 0 -WillpowerToken 8 -TaskToken 0
+        Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
     }
 }
 
@@ -58,7 +58,7 @@ function Add-Habitlet {
         catch {
             throw "Failed to update Habitlet_transaction"
         }
-        Add-LifeTrackerTransaction -ChronoToken 0 -WillpowerToken 0 -TaskToken 15
+        Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
         "Habitlet Registered as Taken"
     }
 }
@@ -120,7 +120,7 @@ function Get-Habitlet {
     end {
         Close-LiteDBConnection | Out-Null
         if ($OutputArray){
-            $OutputArray | Sort Weight -Descending
+            $OutputArray | Sort Priority -Descending
         }
         else {
             "No Habitlet Found"

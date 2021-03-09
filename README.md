@@ -30,12 +30,12 @@ Reward
     Actions
         Reduce character Tokens by Cost
         Attack Boss with Cost
-        If boss dies, generate a new one with Tasks remaining weight as a guide and add BossTokens to character for later use
+        If boss dies, generate a new one with Tasks remaining Priority as a guide and add BossTokens to character for later use
 
 
 Boss
-    Does daily damage to Dharma based on static % of tasks remaining weight
-    Next Boss is determined by remaining tasks weight in queue
+    Does daily damage to Dharma based on static % of tasks remaining Priority
+    Next Boss is determined by remaining tasks Priority in queue
 
 Character
     Name

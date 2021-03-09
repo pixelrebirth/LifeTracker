@@ -1,19 +1,20 @@
 function New-Rewardlet {
     param(
         [parameter(Mandatory=$true)]$Title,
-        [parameter(Mandatory=$true)]$TimeEstimate,
-        [parameter(Mandatory=$true)]$DopamineIndex
+        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)]$TimeEstimate,
+        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)]$DopamineIndex,
+        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)]$TaskRequirement
     )
     begin {
         Import-Module PSLiteDB | Out-Null
-        $Rewardlet = [rewardlet]::new($Title,$TimeEstimate,$DopamineIndex)
+        $Rewardlet = [rewardlet]::new($Title,$TimeEstimate,$DopamineIndex,$TaskRequirement)
     }
     process {
         $Rewardlet.AddToCollection("rewardlet")
     }
     end {
         "Rewardlet Created"
-        Add-LifeTrackerTransaction -ChronoToken 0 -WillpowerToken 2 -TaskToken 0
+        Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
     }
 }
 
@@ -40,23 +41,15 @@ function Add-Rewardlet {
         Open-LiteDBConnection $script:DatabaseLocation | Out-Null
     }
     process {
-        $PossibleRewards = Find-LiteDBDocument -Collection "rewardlet"
+        $Reward = Find-LiteDBDocument -Collection "rewardlet" | Where title -eq $Title
         Close-LiteDBConnection | Out-Null
 
-        $IncreaseTaskRequirement = ($PossibleRewards | Where title -eq $Title).TaskRequirement * .05 #percentage increase, to config?
-        $DecreaseTaskRequirement = $IncreaseTaskRequirement / ($PossibleRewards.count-1)
-
-        foreach ($Reward in $PossibleRewards) {
-            if ($Reward.Title -eq $Title){
-                $Reward.TaskRequirement = $Reward.TaskRequirement + $IncreaseTaskRequirement
-                $Transaction = [rewardlet]::new($Reward)
-                $Transaction.UpdateCollection("rewardlet")
-            }
-            else {
-                $Reward.TaskRequirement = $Reward.TaskRequirement - $DecreaseTaskRequirement
-                $ReduceReward = [rewardlet]::new($Reward)
-                $ReduceReward.UpdateCollection("rewardlet")
-            }
+        if ($Reward.count -eq 1){
+            $Transaction = [rewardlet]::new($Reward)
+            $Transaction.UpdateCollection("rewardlet")
+        }
+        else {
+            throw "Too many rewards with same title: $Title"
         }
     }
     
@@ -68,7 +61,7 @@ function Add-Rewardlet {
         catch {
             throw "Failed to update rewardlet_transaction"
         }
-        Add-LifeTrackerTransaction -ChronoToken $(-$Transaction.TimeEstimate) -WillpowerToken $(-$Transaction.DopamineIndex) -TaskToken $(-$Transaction.TaskRequirement)
+        Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
         "Rewardlet Registered as Taken"
     }
 }
@@ -131,10 +124,10 @@ function Get-Rewardlet {
         Close-LiteDBConnection | Out-Null
         if ($OutputArray){
             if ($FormatView){
-                $OutputArray | Sort Weight -Descending | Select Title,TimeEstimate,DopamineIndex,TaskRequirement
+                $OutputArray | Sort Priority -Descending | Select Title,TimeEstimate,DopamineIndex,TaskRequirement
             }
             else {
-                $OutputArray | Sort Weight -Descending
+                $OutputArray | Sort Priority -Descending
             }
         }
         else {
