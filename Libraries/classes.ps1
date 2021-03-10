@@ -39,7 +39,7 @@ class Base {
 
 class Tasklet : Base {
     [double]$Priority = 50
-    $Complexity
+    [int]$Complexity
     $Value
     
 
