@@ -10,5 +10,17 @@
         "New-Habitlet":             "2;0;3",
         "Add-Habitlet":             "3;2;0",
         "Add-Journlet":             "2;0;3"
-    }
+    },
+    "Values": [
+        "Sensuality",
+        "Systemic",
+        "Leadership",
+        "Mentorship",
+        "Problem Solver",
+        "Otherworldly",
+        "Creativity",
+        "Considerate",
+        "Hardworking",
+        "Willpower"
+    ]
 }

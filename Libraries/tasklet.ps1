@@ -103,7 +103,7 @@ function Register-TaskletTouch {
             foreach($Index in 0..$($AllTasklets.count-1)){
                 do {
                     $Title = $AllTasklets[$Index].Title
-                    while ($Priority -notin @(0,1,2,3,5,8,13,21,34,55)){
+                    while ($Priority -notin @(0,1,2,3,4,5)){
                         [int]$Priority  = Read-Host $Title
                     }
                     if ($AllTasklets.count -gt 1){
