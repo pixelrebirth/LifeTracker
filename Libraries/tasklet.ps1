@@ -8,7 +8,7 @@ function New-Tasklet {
     DynamicParam {
         . $script:LifeTrackerModulePath/Libraries/general.ps1
         [Scriptblock]$ConfigValues = {(Get-LifeTrackerConfig).values}
-        return Get-DynamicParam -ParamName Value -ParamCode $ConfigValues
+        return  Get-DynamicParam -Validate -ParamName Value -ParamCode  $ConfigValues
     }
     Begin{
         $Value = $PsBoundParameters['Value']
@@ -36,7 +36,7 @@ function Get-Tasklet {
     DynamicParam {
         . $script:LifeTrackerModulePath/Libraries/general.ps1
         [Scriptblock]$ConfigValues = {(Get-LifeTrackerConfig).values}
-        return Get-DynamicParam -ParamName Value -ParamCode $ConfigValues
+        return  Get-DynamicParam -Validate -ParamName Value -ParamCode  $ConfigValues
     }
 
     begin {
@@ -83,7 +83,7 @@ function Register-TaskletTouch {
     DynamicParam {
         . $script:LifeTrackerModulePath/Libraries/general.ps1
         [Scriptblock]$ConfigValues = {(Get-LifeTrackerConfig).values}
-        return Get-DynamicParam -ParamName Value -ParamCode $ConfigValues
+        return  Get-DynamicParam -Validate -ParamName Value -ParamCode  $ConfigValues
     }
 
     begin{

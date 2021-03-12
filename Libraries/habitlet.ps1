@@ -29,7 +29,7 @@ function Add-Habitlet {
             (Find-LiteDBDocument -Collection "habitlet").Title
             Close-LiteDBConnection | Out-Null
         }
-        return Get-DynamicParam -ParamName Title -ParamCode $ConfigValues
+        return  Get-DynamicParam -Validate -ParamName Title -ParamCode  $ConfigValues
     }
     
     begin {
@@ -97,7 +97,7 @@ function Get-Habitlet {
             (Find-LiteDBDocument -Collection "habitlet").Title
             Close-LiteDBConnection | Out-Null
         }
-        return Get-DynamicParam -ParamName Title -ParamCode $ConfigValues
+        return  Get-DynamicParam -Validate -ParamName Title -ParamCode  $ConfigValues
     }
 
     begin {
