@@ -1,8 +1,9 @@
 function Add-Journlet {
     [CmdletBinding()]
     param (
-        $Title,
-        $Tags
+        [parameter(Mandatory=$true)]$WritingPrompt,
+        [parameter(Mandatory=$true)]$Title,
+        [parameter(Mandatory=$true)]$Tags
     )
     
     begin {
@@ -10,9 +11,8 @@ function Add-Journlet {
         $Tags = @($Tags.split(','))
     }
     process {
-        $Body = Read-Host "What do you need to talk about today"
         $Transaction = [Journlet]::new($Title,$Tags)
-        $Transaction.Body = $Body
+        $Transaction.Body = $WritingPrompt
     }
     
     end {

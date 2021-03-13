@@ -42,6 +42,10 @@ describe "LifeTracker" {
         (Get-Tasklet -Value "Systemic") | Complete-Tasklet | Should -Be "Tasklet [Testing 123] Completed"
     }
 
+    it "Should remove a tasklet with Remove-Tasklet" {
+        (Get-Tasklet -Value "Leadership") | Remove-Tasklet | Should -Be  "Tasklet [Another Tasklet] Removed"
+    }
+
     it "Should upload a new rewardlet" {
         New-Rewardlet -Title "More Testing" -TimeEstimate 5 -DopamineIndex 5 -TaskRequirement 5 | should -Be "Rewardlet Created"
         New-Rewardlet -Title "Testing Reward" -TimeEstimate 8 -DopamineIndex 8 -TaskRequirement 8 | should -Be "Rewardlet Created"
@@ -112,8 +116,7 @@ describe "LifeTracker" {
     }
 
     it "Should Add-Journlet to the transaction database" {
-        mock Read-Host {"This is a journal entry."}
-        Add-Journlet -Title "Journal Entry" -Tags "Test,123" | Should -Be "Journlet Registered as Taken"
+        Add-Journlet -Title "Journal Entry" -Tags "Test,123" -WritingPrompt "This is a journal entry." | Should -Be "Journlet Registered as Taken"
     }
 
     it "Should be able to pull an available Journlet" {

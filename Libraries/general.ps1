@@ -82,6 +82,7 @@ function Add-LifeTrackerTransaction {
     process {
         if ($FunctionName) {
             $Data = [PSCustomObject]@{
+                Cmdlet            = $MyInvocation.MyCommand.Name
                 WillpowerToken    = $TransactionValues[0]
                 ChronoToken       = $TransactionValues[1]
                 TaskToken         = $TransactionValues[2]
@@ -89,6 +90,7 @@ function Add-LifeTrackerTransaction {
         }
         else {
             $Data = [PSCustomObject]@{
+                Cmdlet            = $MyInvocation.MyCommand.Name
                 WillpowerToken    = [int]$WillpowerToken
                 ChronoToken       = [int]$ChronoToken
                 TaskToken         = [int]$TaskToken

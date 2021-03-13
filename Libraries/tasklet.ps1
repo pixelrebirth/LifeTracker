@@ -63,7 +63,7 @@ function Get-Tasklet {
         Close-LiteDBConnection | Out-Null
         if ($OutputArray){
             if ($FormatView){
-                $OutputArray | Sort Priority -Descending | Select Title,Priority,Value,Tags,Complexity
+                $OutputArray | Sort Priority -Descending | Select Title,Value,Tags,Complexity
             }
             else {
                 $OutputArray | Sort Priority -Descending
@@ -162,5 +162,27 @@ function Complete-Tasklet {
     }
     end{
         Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
+    }
+}
+
+function Remove-Tasklet {
+    [cmdletbinding()]
+    param(
+        [parameter(ValueFromPipeline=$true)]$InputObject
+    )
+
+    begin{}
+    process{
+        try{
+            $InputObject.RemoveFromCurrentCollection()
+            Write-Output "Tasklet [$($InputObject.title)] Removed"
+        }
+        catch {
+            Write-Error "Error occurred deleting object from archive, error: $($error[0].exception.message)"
+            Close-LiteDBConnection | Out-Null
+        }
+    }
+    end{
+
     }
 }

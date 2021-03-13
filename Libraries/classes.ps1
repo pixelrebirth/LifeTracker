@@ -1,5 +1,5 @@
 class Base {
-    [ValidateLength(5,40)]$Title
+    [ValidateLength(5,50)]$Title
     [guid]$_id = (New-Guid).guid
     [long]$CreatedOn = (Get-Date).Ticks
     [long]$UpdatedOn
