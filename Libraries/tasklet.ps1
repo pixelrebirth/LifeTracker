@@ -12,6 +12,9 @@ function New-Tasklet {
     }
     Begin{
         $Value = $PsBoundParameters['Value']
+        if (!$Value){
+            throw "Missing Value, Supply Value"
+        }
         $Tags = @($Tags.split(','))
     }
     Process {
@@ -36,7 +39,7 @@ function Get-Tasklet {
     DynamicParam {
         . $script:LifeTrackerModulePath/Libraries/general.ps1
         [Scriptblock]$ConfigValues = {(Get-LifeTrackerConfig).values}
-        return  Get-DynamicParam -Validate -ParamName Value -ParamCode  $ConfigValues
+        return  Get-DynamicParam -Validate -ParamName Value -ParamCode $ConfigValues
     }
 
     begin {

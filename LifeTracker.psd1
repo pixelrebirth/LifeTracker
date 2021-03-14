@@ -12,7 +12,7 @@
 RootModule = 'LifeTracker.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.0'
+ModuleVersion = '0.2.0'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -91,7 +91,9 @@ FunctionsToExport = @(
     'Get-HabitletTransaction',
     'Get-LifeTracker',
     'Add-Journlet',
-    'Get-Journlet'
+    'Get-Journlet',
+    'Add-Countlet',
+    'Get-Countlet'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
