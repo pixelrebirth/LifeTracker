@@ -1,7 +1,7 @@
 {
    "TransactionValues": {
-        "New-Tasklet":              "2;2;1",
-        "Complete-Tasklet":         "0;0;5",
+        "New-Tasklet":              "3;2;0",
+        "Complete-Tasklet":         "0;2;3",
         "Register-TaskletTouch":    "2;0;3",
         "New-Rewardlet":            "3;2;0",
         "Add-Rewardlet":            "2;3;0",
@@ -9,7 +9,8 @@
         "Add-Timelet":              "2;3;0",
         "New-Habitlet":             "2;0;3",
         "Add-Habitlet":             "3;2;0",
-        "Add-Journlet":             "2;0;3"
+        "Add-Journlet":             "2;0;3",
+        "Add-Countlet":             "2;3;0"
     },
     "Values": [
         "Sensuality",

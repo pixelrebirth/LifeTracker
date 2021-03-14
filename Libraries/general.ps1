@@ -121,6 +121,7 @@ function New-TaskletDatabase {
         "rewardlet",
         "rewardlet_transaction",
         "journlet_transaction",
+        "countlet_transaction",
         "timelet",
         "timelet_transaction",
         "habitlet",

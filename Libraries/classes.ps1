@@ -114,3 +114,10 @@ class Timelet : Base {
         $this.Tags = $Document.Tags
     }
 }
+
+class Countlet : Base {
+    Countlet ($Title,$Tags) {
+        $this.Title = $Title
+        $this.Tags = $Tags
+    }
+}
