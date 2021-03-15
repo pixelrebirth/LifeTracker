@@ -77,6 +77,7 @@ FunctionsToExport = @(
     'Remove-Tasklet',
     'Complete-Tasklet',
     'Register-TaskletTouch',
+    'Split-Tasklet',
     'New-Rewardlet',
     "Get-Rewardlet",
     'Add-Rewardlet',

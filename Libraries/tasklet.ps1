@@ -3,13 +3,17 @@ function New-Tasklet {
     Param (
         [parameter(Mandatory=$true)]$Title,
         [parameter(Mandatory=$true)]$Tags,
-        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)]$Complexity
+        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)]$Complexity,
+        $RelatedTo
     )
     Begin{
         $Tags = @($Tags.split(','))
     }
     Process {
         $Tasklet = [Tasklet]::new($Title,$Tags,$Complexity)
+        if ($RelatedTo){
+            $Tasklet.RelatedTo = $RelatedTo
+        }
     }
     End {
         $Tasklet.AddToCollection("Tasklet")
@@ -153,4 +157,28 @@ function Remove-Tasklet {
     end{
 
     }
+}
+
+function Split-Tasklet {
+    [cmdletbinding()]
+    param(
+        [parameter(ValueFromPipeline=$true)]$InputObject
+    )
+    begin{}
+    process{
+        try{
+            New-Tasklet -Tags $InputObject.Tags -RelatedTo $InputObject.Title
+            New-Tasklet -Tags $InputObject.Tags -RelatedTo $InputObject.Title
+            $InputObject.RemoveFromCurrentCollection()
+            Write-Output "Tasklet [$($InputObject.title)] Split"
+        }
+        catch {
+            Write-Error "Error occurred deleting object from archive, error: $($error[0].exception.message)"
+            Close-LiteDBConnection | Out-Null
+        }
+    }
+    end{
+        Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
+    }
+
 }

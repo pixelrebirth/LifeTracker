@@ -3,6 +3,7 @@
         "New-Tasklet":              "3:2:0",
         "Complete-Tasklet":         "0:2:3",
         "Register-TaskletTouch":    "2:0:3",
+        "Split-Tasklet":            "1:2:2",
         "New-Rewardlet":            "3:2:0",
         "Add-Rewardlet":            "2:3:0",
         "New-Timelet":              "0:2:3",

@@ -15,10 +15,16 @@ describe "LifeTracker" {
     }
 
     it "New-Tasklet uploads a document to DB" {
+        # New-Tasklet -Title "Large Tasklet" -Tags "Test,123" -Complexity 21 | Should -Be "Tasklet Saved"
         New-Tasklet -Title "Another Tasklet" -Tags "Test,123" -Complexity 21 | Should -Be "Tasklet Saved"
         New-Tasklet -Title "Testing 123" -Tags "123" -Complexity 8 | Should -Be "Tasklet Saved"
     }
     
+    # it "Should split a tasklet if requested" {
+    #     mock New-Tasklet {New-Tasklet -Title "TestingThisMock" -Complexity 13}
+    #     Get-Tasklet | where title -eq "Large Tasklet" | Split-Tasklet
+    # }
+
     it "Get-Tasklet returns created tasklet" {
         (Get-Tasklet -FormatView -Tags "Test").Title | Should -Be "Another Tasklet"
         (Get-Tasklet | where title -eq "Testing 123").Title | Should -Be "Testing 123"

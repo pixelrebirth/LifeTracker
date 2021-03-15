@@ -40,8 +40,8 @@ class Base {
 class Tasklet : Base {
     [double]$Priority = 50
     [int]$Complexity
+    $RelatedTo
     
-
     Tasklet ($Title,$Tags,$Complexity) {
         $this.title = $title
         $this.Tags = $Tags
