@@ -75,7 +75,7 @@ function Add-LifeTrackerTransaction {
         Open-LiteDBConnection -Path $Path | Out-Null
         $Config = Get-LifeTrackerConfig
         if ($FunctionName) {
-            $TransactionValues = $Config.TransactionValues.$FunctionName.split(';')
+            $TransactionRatio = $Config.TransactionRatio.$FunctionName.split(':')
         }
     }
     
@@ -83,9 +83,9 @@ function Add-LifeTrackerTransaction {
         if ($FunctionName) {
             $Data = [PSCustomObject]@{
                 Cmdlet            = $MyInvocation.MyCommand.Name
-                WillpowerToken    = $TransactionValues[0]
-                ChronoToken       = $TransactionValues[1]
-                TaskToken         = $TransactionValues[2]
+                WillpowerToken    = $TransactionRatio[0]
+                ChronoToken       = $TransactionRatio[1]
+                TaskToken         = $TransactionRatio[2]
             }
         }
         else {

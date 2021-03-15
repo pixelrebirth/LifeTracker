@@ -239,3 +239,14 @@ See above documentation on what that all means
 # ConsolidateData
 [Reduce Transaction Table by Summing All Columns and Rebuilding the Table]
 OnMeasureCommand > 2000 milliseconds OR on >1000 records
+
+Is there room for WANT vs NEED to be a guaging factor? Maybe WANTS cost rewards and NEEDS give TOKENS
+I could write and algorithm that combines NEED gauge, WANT gauge and COMPLEXITY to create a Motivation quotient
+(NEED+WANT) - COMPLEXITY = MOTIVATION
+
+ex.
+Working on John Shrudel
+NEED: 5
+WANT: 3
+COMPLEXITY: 3
+MOTIVATION = 5

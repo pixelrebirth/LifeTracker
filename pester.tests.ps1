@@ -15,13 +15,13 @@ describe "LifeTracker" {
     }
 
     it "New-Tasklet uploads a document to DB" {
-        New-Tasklet -Value "Leadership" -Title "Another Tasklet" -Tags "Test,123" -Complexity 21 | Should -Be "Tasklet Saved"
-        New-Tasklet -Value "Systemic" -Title "Testing 123" -Tags "123" -Complexity 8 | Should -Be "Tasklet Saved"
+        New-Tasklet -Title "Another Tasklet" -Tags "Test,123" -Complexity 21 | Should -Be "Tasklet Saved"
+        New-Tasklet -Title "Testing 123" -Tags "123" -Complexity 8 | Should -Be "Tasklet Saved"
     }
     
     it "Get-Tasklet returns created tasklet" {
         (Get-Tasklet -FormatView -Tags "Test").Title | Should -Be "Another Tasklet"
-        (Get-Tasklet -Value "Systemic").Title | Should -Be "Testing 123"
+        (Get-Tasklet | where title -eq "Testing 123").Title | Should -Be "Testing 123"
     }
 
     it "Register-TaskletTouch allocates 50 to Priority when Read-Host is 3" {
@@ -35,15 +35,15 @@ describe "LifeTracker" {
         Mock Read-Host {return "3"}
         Mock Write-Host {}
 
-        Register-TaskletTouch -Value "Creativity" -Tags "Test" | Should -Be "No Tasklets Found"
+        Register-TaskletTouch -Tags "Test" | Should -Be "No Tasklets Found"
     }
     
     it "Should archive the tasklet created above" {
-        (Get-Tasklet -Value "Systemic") | Complete-Tasklet | Should -Be "Tasklet [Testing 123] Completed"
+        (Get-Tasklet | where title -eq "Testing 123") | Complete-Tasklet | Should -Be "Tasklet [Testing 123] Completed"
     }
 
     it "Should remove a tasklet with Remove-Tasklet" {
-        (Get-Tasklet -Value "Leadership") | Remove-Tasklet | Should -Be  "Tasklet [Another Tasklet] Removed"
+        (Get-Tasklet | where title -eq "Another Tasklet") | Remove-Tasklet | Should -Be  "Tasklet [Another Tasklet] Removed"
     }
 
     it "Should upload a new rewardlet" {

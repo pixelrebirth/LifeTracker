@@ -40,7 +40,6 @@ class Base {
 class Tasklet : Base {
     [double]$Priority = 50
     [int]$Complexity
-    $Value
     
 
     Tasklet ($Title,$Tags,$Complexity) {
@@ -55,7 +54,6 @@ class Tasklet : Base {
         $this.Title = $Document.Title
         $this._id = $Document._id
         $this.Complexity = $Document.Complexity
-        $this.Value = $Document.value
         $this.Priority = $Document.Priority
         $this.Tags = $Document.Tags
         $this.UpdatedOn = (Get-Date).Ticks
