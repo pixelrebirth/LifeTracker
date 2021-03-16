@@ -57,6 +57,7 @@ class Tasklet : Base {
         $this.Priority = $Document.Priority
         $this.Tags = $Document.Tags
         $this.UpdatedOn = (Get-Date).Ticks
+        $this.RelatedTo = $Document.RelatedTo
     }
 }
 

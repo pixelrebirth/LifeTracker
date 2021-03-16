@@ -162,13 +162,20 @@ function Remove-Tasklet {
 function Split-Tasklet {
     [cmdletbinding()]
     param(
-        [parameter(ValueFromPipeline=$true)]$InputObject
+        [parameter(ValueFromPipeline=$true)]$InputObject,
+        $NumberSplit = 2
     )
-    begin{}
+    begin{
+        if ($NumberSplit -lt 2){
+            $NumberSplit = 2
+        }
+    }
     process{
         try{
-            New-Tasklet -Tags $InputObject.Tags -RelatedTo $InputObject.Title
-            New-Tasklet -Tags $InputObject.Tags -RelatedTo $InputObject.Title
+            1..$NumberSplit | foreach {
+                New-Tasklet -Tags $InputObject.Tags -RelatedTo $InputObject.Title
+            }
+
             $InputObject.RemoveFromCurrentCollection()
             Write-Output "Tasklet [$($InputObject.title)] Split"
         }
