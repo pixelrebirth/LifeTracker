@@ -1,12 +1,18 @@
 function New-Rewardlet {
     param(
         [parameter(Mandatory=$true)]$Title,
-        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)]$TimeEstimate,
-        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)]$DopamineIndex,
-        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)]$TaskRequirement
+        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)][int]$Sight,
+        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)][int]$Hear,
+        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)][int]$Touch,
+        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)][int]$Smell,
+        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)][int]$Taste,
+        [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)][int]$Time
     )
     begin {
         Import-Module PSLiteDB | Out-Null
+        [int]$TimeEstimate = $Time
+        [int]$DopamineIndex = $Touch + $Hear + ($Sight/2)
+        [int]$TaskRequirement = $Taste + $Smell + ($Sight/2)
         $Rewardlet = [rewardlet]::new($Title,$TimeEstimate,$DopamineIndex,$TaskRequirement)
     }
     process {

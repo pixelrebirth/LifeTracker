@@ -1,16 +1,16 @@
 {
    "TransactionRatio": {
-        "New-Tasklet":              "3:2:0",
-        "Complete-Tasklet":         "0:2:3",
-        "Register-TaskletTouch":    "2:0:3",
-        "Split-Tasklet":            "1:2:2",
-        "New-Rewardlet":            "3:2:0",
-        "Add-Rewardlet":            "2:3:0",
-        "New-Timelet":              "0:2:3",
-        "Add-Timelet":              "2:3:0",
-        "New-Habitlet":             "2:0:3",
-        "Add-Habitlet":             "3:2:0",
-        "Add-Journlet":             "2:0:3",
-        "Add-Countlet":             "2:3:0"
+        "New-Tasklet":              "0:0:0",
+        "Complete-Tasklet":         "3:0:0",
+        "Register-TaskletTouch":    "0:0:0",
+        "Split-Tasklet":            "0:0:0",
+        "New-Rewardlet":            "0:0:0",
+        "Add-Rewardlet":            "5:0:0",
+        "New-Timelet":              "0:0:0",
+        "Add-Timelet":              "2:0:0",
+        "New-Habitlet":             "0:0:0",
+        "Add-Habitlet":             "4:0:0",
+        "Add-Journlet":             "0:0:0",
+        "Add-Countlet":             "1:0:0"
     }
 }

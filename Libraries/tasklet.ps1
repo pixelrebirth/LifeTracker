@@ -28,7 +28,20 @@ function Get-Tasklet {
         $Tags,
         [switch]$FormatView
     )
+    DynamicParam {
+        . $script:LifeTrackerModulePath/Libraries/general.ps1
+        [Scriptblock]$ConfigValues = {
+            Import-Module PSLiteDB | Out-Null
+            Open-LiteDBConnection $script:DatabaseLocation | Out-Null
+            (Find-LiteDBDocument -Collection "tasklet").Title
+            Close-LiteDBConnection | Out-Null
+        }
+        return  Get-DynamicParam -Validate -ParamName Title -ParamCode  $ConfigValues
+    }
+    
     begin {
+        $Title = $PsBoundParameters['Title']
+
         Import-Module PSLiteDB | Out-Null
         $OutputArray = @()
         Open-LiteDBConnection $script:DatabaseLocation | Out-Null
@@ -72,7 +85,7 @@ function Register-TaskletTouch {
     }
     process {
         if ($AllTasklets){
-            Write-Host -ForegroundColor Yellow "`nPlease enter Priority 0,1,2,3,5,8,13,21,34,55 or press return`n------"
+            Write-Host -ForegroundColor Yellow "`nPlease enter Priority 0,1,2,3,4,5 or press return`n------"
             foreach($Index in 0..$($AllTasklets.count-1)){
                 do {
                     $Title = $AllTasklets[$Index].Title
@@ -114,6 +127,7 @@ function Update-Tasklet {
         $Title,
         $Tags
     )
+    #Using input object, rehydrate the object and invoke update-litedbdocument
 }
 function Complete-Tasklet {
     [cmdletbinding()]

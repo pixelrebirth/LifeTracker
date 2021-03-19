@@ -250,3 +250,16 @@ NEED: 5
 WANT: 3
 COMPLEXITY: 3
 MOTIVATION = 5
+
+Healthlet - A health tracker for whatever ---
+
+https://www.bustle.com/life/11-weird-signs-your-body-might-not-tolerate-sugar-well-63401
+Sugar, ask the 12 questions from the article and rate on fib.
+
+Pain, track the kinds of pain in fib
+
+Create a scheduler that runs a sum on the LifeTracker and stores it in a table, do this every {{ 4 }} hours
+This can be used for analytics and AI to warn of behaviors and send action items
+
+It is the baseline analytics that should drive the multipliers of the TransactionRation set in the config
+Ratio has 5 attributes each token, 1, 2, 3, 4, and 5.
