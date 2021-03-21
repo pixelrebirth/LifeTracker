@@ -80,7 +80,7 @@ function Register-TaskletTouch {
     begin{
         $AllTasklets = Get-Tasklet
         if ($Tags){
-            $AllTasklets = $AllTasklets |  where Tags -Contain $Tag
+            $AllTasklets = $AllTasklets | where Tags -Contain $Tags
         }
     }
     process {

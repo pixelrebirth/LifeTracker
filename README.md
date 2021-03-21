@@ -261,5 +261,34 @@ Pain, track the kinds of pain in fib
 Create a scheduler that runs a sum on the LifeTracker and stores it in a table, do this every {{ 4 }} hours
 This can be used for analytics and AI to warn of behaviors and send action items
 
-It is the baseline analytics that should drive the multipliers of the TransactionRation set in the config
-Ratio has 5 attributes each token, 1, 2, 3, 4, and 5.
+It is the baseline analytics that should drive the multipliers of the TransactionRatio set in the config
+Ratio has 5 attributes each token, 1, 2, 3, 4, and 5 in the config file, no more no less
+
+RestAPI portion should be installed during INSTALL and be highly abstracted to JSON Blob. I dont want to edit code every time I need a new API call--
+THIS IS JUST FOR ME! I DO NOT WANT TO DISTRIBUTE THIS INSECURE POS WORK
+
+Rewardlet Elements
+---
+Touch
+Taste
+Hearing
+Sight
+Smelling
+Time
+
+Take a hit
+Touch: 1 (WillpowerToken)
+Taste: 2 (TaskToken)
+Hear:  0 (WillpowerToken)
+Smell: 1 (TaskToken)
+Sight: 2 (WillpowerToken)
+Time:  3 (ChronoToken)
+
+IFTTT a MUST for rewards to be useful
+
+Step 1, create dopamine/senses based Rewardlet
+Step 2, create API endpoint for IFTTT
+Step 3, register IFTTT to API for each reward
+Step 4, create analytics for checking trends
+Step 5, gamify the rewards to 'deal damage' to 'boss' for 'bosstoken'
+Step 6, create 'bosstoken' high end rewards

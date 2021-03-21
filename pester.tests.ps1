@@ -35,7 +35,7 @@ describe "LifeTracker" {
         Mock Read-Host {return "3"}
         Mock Write-Host {}
 
-        Register-TaskletTouch -Tags "Test" | Should -Be "No Tasklets Found"
+        (Register-TaskletTouch -Tags "Test").title | Should -Be "Another Tasklet"
     }
     
     it "Should archive the tasklet created above" {
@@ -110,8 +110,8 @@ describe "LifeTracker" {
 
     it "Should output a transaction log with Get-LifetrackerTransaction" {
         $Transactions = Get-LifeTracker -SumOnly
-        $Transactions.ChronoToken| Should -Be -5
-        $Transactions.TaskToken | Should -Be -6
+        $Transactions.ChronoToken| Should -Be 16
+        $Transactions.TaskToken | Should -Be 16
         $Transactions.WillpowerToken| Should -Be -7
     }
 
