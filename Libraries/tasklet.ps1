@@ -89,10 +89,10 @@ function Register-TaskletTouch {
             foreach($Index in 0..$($AllTasklets.count-1)){
                 do {
                     $Title = $AllTasklets[$Index].Title
-                    [int]$Priority = -1
+                    $Priority = -1
 
                     while ($Priority -notin @(0,1,2,3,4,5,"c")){
-                        [int]$Priority  = Read-Host $Title
+                        $Priority  = Read-Host $Title
                         if ($Priority -eq "c"){
                             $AllTasklets[$Index] | Complete-Tasklet
                             $Priority = 0
@@ -109,7 +109,7 @@ function Register-TaskletTouch {
                     $Priority -ge 0 -AND $Priority -le 5
                 )
                 
-                $AllTasklets[$Index].Priority += ($Priority + $PerTaskletDecrease)
+                $AllTasklets[$Index].Priority += ([int]$Priority + $PerTaskletDecrease)
                 foreach($Index in 0..$($AllTasklets.count-1)){
                     $AllTasklets[$Index].Priority -= $PerTaskletDecrease
                 }
