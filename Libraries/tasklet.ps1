@@ -91,8 +91,12 @@ function Register-TaskletTouch {
                     $Title = $AllTasklets[$Index].Title
                     [int]$Priority = -1
 
-                    while ($Priority -notin @(0,1,2,3,4,5)){
+                    while ($Priority -notin @(0,1,2,3,4,5,"c")){
                         [int]$Priority  = Read-Host $Title
+                        if ($Priority -eq "c"){
+                            $AllTasklets[$Index] | Complete-Tasklet
+                            $Priority = 0
+                        } 
                     }
                     if ($AllTasklets.count -gt 1){
                         $PerTaskletDecrease = $Priority / ($AllTasklets.count-1)
