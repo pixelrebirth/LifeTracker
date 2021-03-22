@@ -85,7 +85,7 @@ function Register-TaskletTouch {
     }
     process {
         if ($AllTasklets){
-            Write-Host -ForegroundColor Yellow "`nPlease enter Priority 0,1,2,3,4,5 or press return`n------"
+            Write-Host -ForegroundColor Yellow "`nPlease enter Priority 0,1,2,3,4,5,c or press return`n------"
             foreach($Index in 0..$($AllTasklets.count-1)){
                 do {
                     $Title = $AllTasklets[$Index].Title
@@ -97,6 +97,9 @@ function Register-TaskletTouch {
                             $AllTasklets[$Index] | Complete-Tasklet
                             $Priority = 0
                         } 
+                        if (!$Priority){
+                            $Priority = 0
+                        }
                     }
                     if ($AllTasklets.count -gt 1){
                         $PerTaskletDecrease = $Priority / ($AllTasklets.count-1)
