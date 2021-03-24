@@ -1,4 +1,6 @@
 function New-Rewardlet {
+    [CmdletBinding()]
+    [Alias("nr")]
     param(
         [parameter(Mandatory=$true)]$Title,
         [parameter(Mandatory=$true)][ValidateSet(0,1,2,3,5,8,13,21,34,55)][int]$Sight,
@@ -26,6 +28,7 @@ function New-Rewardlet {
 
 function Add-Rewardlet {
     [CmdletBinding()]
+    [Alias("ar")]
     param (
         
     )
@@ -96,6 +99,7 @@ function Get-RewardletTransaction {
 
 function Get-Rewardlet {
     [cmdletbinding()]
+    [Alias("gr")]
     param(
         [switch]$FormatView
     )

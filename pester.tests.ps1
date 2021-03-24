@@ -20,7 +20,7 @@ describe "LifeTracker" {
     }
 
     it "Get-Tasklet returns created tasklet" {
-        (Get-Tasklet -FormatView -Tags "Test").Title | Should -Be "Another Tasklet"
+        (Get-Tasklet -PrioritySort -ComplexSort -Tags "Test").Title | Should -Be "Another Tasklet"
         (Get-Tasklet | where title -eq "Testing 123").Title | Should -Be "Testing 123"
     }
 

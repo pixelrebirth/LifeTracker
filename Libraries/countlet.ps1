@@ -1,5 +1,6 @@
 function Add-Countlet {
     [CmdletBinding()]
+    [Alias("ac")]
     param (
         [parameter(Mandatory=$true)]$Title,
         [parameter(Mandatory=$true)]$Tags
@@ -18,7 +19,7 @@ function Add-Countlet {
             $Transaction.AddToCollection("countlet_transaction")
         }
         catch {
-            throw "Failed to update Countlet_transaction"
+            throw "Failed to update countlet_transaction"
         }
         Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
         "Countlet Registered as Taken"
@@ -27,6 +28,7 @@ function Add-Countlet {
 
 function Get-Countlet {
     [CmdletBinding()]
+    [Alias("gc")]
     param (
         
     )
@@ -37,7 +39,7 @@ function Get-Countlet {
     }
     
     process {
-        $Output = Find-LiteDBDocument -Collection "Countlet_transaction"
+        $Output = Find-LiteDBDocument -Collection "countlet_transaction"
     }
     
     end {

@@ -1,4 +1,6 @@
 function New-Habitlet {
+    [CmdletBinding()]
+    [Alias("nh")]
     param(
         [parameter(Mandatory=$true)]$Title,
         [parameter(Mandatory=$true)]$Tags
@@ -18,6 +20,7 @@ function New-Habitlet {
 
 function Add-Habitlet {
     [CmdletBinding()]
+    [Alias("ah")]
     param (
         
     )
@@ -85,7 +88,8 @@ function Get-HabitletTransaction {
 }
 
 function Get-Habitlet {
-    [cmdletbinding()]
+    [CmdletBinding()]
+    [Alias("gh")]
     param(
         [switch]$FormatView
     )

@@ -1,5 +1,6 @@
 function Add-Journlet {
     [CmdletBinding()]
+    [Alias("aj")]
     param (
         [parameter(Mandatory=$true)]$WritingPrompt,
         [parameter(Mandatory=$true)]$Title,
@@ -29,6 +30,7 @@ function Add-Journlet {
 
 function Get-Journlet {
     [CmdletBinding()]
+    [Alias("gj")]
     param (
         
     )

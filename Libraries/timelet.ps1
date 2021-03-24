@@ -1,4 +1,6 @@
 function New-Timelet {
+    [CmdletBinding()]
+    [Alias("nti")]
     param(
         [parameter(Mandatory=$true)]$Title,
         [parameter(Mandatory=$true)]$Tags
@@ -18,6 +20,7 @@ function New-Timelet {
 
 function Add-Timelet {
     [CmdletBinding()]
+    [Alias("ati")]
     param (
         
     )
@@ -85,7 +88,8 @@ function Get-TimeletTransaction {
 }
 
 function Get-Timelet {
-    [cmdletbinding()]
+    [CmdletBinding()]
+    [Alias("gti")]
     param(
         [switch]$FormatView
     )

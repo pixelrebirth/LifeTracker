@@ -1,5 +1,6 @@
 function New-Tasklet {
     [cmdletbinding()]
+    [Alias("nt")]
     Param (
         [parameter(Mandatory=$true)]$Title,
         [parameter(Mandatory=$true)]$Tags,
@@ -24,24 +25,16 @@ function New-Tasklet {
 
 function Get-Tasklet {
     [cmdletbinding()]
+    [Alias("gt")]
     param(
         $Tags,
-        [switch]$FormatView
+        [string]$Match,
+        [switch]$ComplexSort,
+        [switch]$PrioritySort
     )
-    DynamicParam {
-        . $script:LifeTrackerModulePath/Libraries/general.ps1
-        [Scriptblock]$ConfigValues = {
-            Import-Module PSLiteDB | Out-Null
-            Open-LiteDBConnection $script:DatabaseLocation | Out-Null
-            (Find-LiteDBDocument -Collection "tasklet").Title
-            Close-LiteDBConnection | Out-Null
-        }
-        return  Get-DynamicParam -Validate -ParamName Title -ParamCode  $ConfigValues
-    }
     
     begin {
-        $Title = $PsBoundParameters['Title']
-
+        
         Import-Module PSLiteDB | Out-Null
         $OutputArray = @()
         Open-LiteDBConnection $script:DatabaseLocation | Out-Null
@@ -51,6 +44,9 @@ function Get-Tasklet {
         if ($Tags){
             $GetDocuments = $GetDocuments | where Tags -Contain $Tags
         }
+        if ($Match){
+            $GetDocuments = $GetDocuments | where title -match $Match
+        }
         
         foreach ($Document in $GetDocuments){
             $OutputArray += [tasklet]::new($Document)
@@ -59,8 +55,11 @@ function Get-Tasklet {
     end {
         Close-LiteDBConnection | Out-Null
         if ($OutputArray){
-            if ($FormatView){
-                $OutputArray | Sort Priority -Descending | Select Title,Tags,Complexity
+            if ($ComplexSort){
+                $OutputArray | Sort Priority -Descending  | sort complexity,title |  select title,complexity
+            }
+            elseif ($PrioritySort){
+                $OutputArray | Sort Priority -Descending  | sort priority,title |  select title,priority
             }
             else {
                 $OutputArray | Sort Priority -Descending
@@ -74,6 +73,7 @@ function Get-Tasklet {
 
 function Register-TaskletTouch {
     [cmdletbinding()]
+    [Alias("rtt")]
     param(
         $Tags
     )
@@ -93,16 +93,13 @@ function Register-TaskletTouch {
 
                     while ($Priority -notin @(0,1,2,3,4,5,"c","r")){
                         $Priority  = Read-Host $Title
-                        if ($Priority -eq "c"){
-                            $AllTasklets[$Index] | Complete-Tasklet
-                            $Priority = 0
-                        }
-                        if ($Priority -eq "r"){
-                            $AllTasklets[$Index] | Remove-Tasklet
-                            $Priority = 0
-                        } 
-                        if (!$Priority){
-                            $Priority = 0
+                        switch ($priority){
+                            "c" {
+                                $AllTasklets[$Index] | Complete-Tasklet
+                            }
+                            "r" {
+                                $AllTasklets[$Index] | Remove-Tasklet
+                            }
                         }
                     }
                     if ($AllTasklets.count -gt 1){
@@ -144,6 +141,7 @@ function Update-Tasklet {
 }
 function Complete-Tasklet {
     [cmdletbinding()]
+    [Alias("ct")]
     param(
         [parameter(ValueFromPipeline=$true)]$InputObject
     )
@@ -166,6 +164,7 @@ function Complete-Tasklet {
 
 function Remove-Tasklet {
     [cmdletbinding()]
+    [Alias("rt")]
     param(
         [parameter(ValueFromPipeline=$true)]$InputObject
     )
