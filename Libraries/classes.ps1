@@ -6,7 +6,6 @@ class Base {
     $Tags
     $DbPath = $script:DatabaseLocation
 
-
     [void] UpdateCollection ($Collection) {
         $this.UpdatedOn = (Get-Date).Ticks
 

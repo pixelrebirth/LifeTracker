@@ -1,7 +1,7 @@
 function Get-LifeTracker {
     [CmdletBinding()]
     param (
-        [switch]$SumOnly
+        [switch]$Full
     )
     
     begin {
@@ -15,7 +15,7 @@ function Get-LifeTracker {
     
     end {
         Close-LiteDBConnection | Out-Null
-        if($SumOnly){
+        if(!$Full){
             $Sum = $Output | Measure-Object -Sum -Property WillpowerToken,ChronoToken,TaskToken
             $Output = [PSCustomObject]@{
                 WillpowerToken = ($Sum | Where Property -eq WillpowerToken).sum

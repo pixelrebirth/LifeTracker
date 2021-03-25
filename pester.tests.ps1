@@ -91,7 +91,7 @@ describe "LifeTracker" {
     }
 
     it "Should show sums for Get-LifeTracker" {
-        (Get-LifeTracker -SumOnly).WillpowerToken | Should -Be -11
+        (Get-LifeTracker).WillpowerToken | Should -Be -11
     }
 
     it "Should upload a New-Habitlet" {
@@ -109,7 +109,7 @@ describe "LifeTracker" {
     }
 
     it "Should output a transaction log with Get-LifetrackerTransaction" {
-        $Transactions = Get-LifeTracker -SumOnly
+        $Transactions = Get-LifeTracker
         $Transactions.ChronoToken| Should -Be 16
         $Transactions.TaskToken | Should -Be 16
         $Transactions.WillpowerToken| Should -Be -7

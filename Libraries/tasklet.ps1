@@ -55,11 +55,14 @@ function Get-Tasklet {
     end {
         Close-LiteDBConnection | Out-Null
         if ($OutputArray){
-            if ($ComplexSort){
-                $OutputArray | Sort Priority -Descending  | sort complexity,title |  select title,complexity
+            if ($PrioritySort -AND $ComplexSort){
+                $OutputArray | Sort Priority -Descending  | sort priority,complexity,title |  select title,priority,complexity
             }
             elseif ($PrioritySort){
                 $OutputArray | Sort Priority -Descending  | sort priority,title |  select title,priority
+            }
+            elseif ($ComplexSort){
+                $OutputArray | Sort Priority -Descending  | sort complexity,title |  select title,complexity
             }
             else {
                 $OutputArray | Sort Priority -Descending
