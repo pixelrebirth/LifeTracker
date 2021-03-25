@@ -1,6 +1,6 @@
 function Add-Countlet {
     [CmdletBinding()]
-    [Alias("ac")]
+    [Alias("aco")]
     param (
         [parameter(Mandatory=$true)]$Title,
         [parameter(Mandatory=$true)]$Tags
@@ -28,7 +28,7 @@ function Add-Countlet {
 
 function Get-Countlet {
     [CmdletBinding()]
-    [Alias("gc")]
+    [Alias("gco")]
     param (
         
     )
