@@ -1,7 +1,7 @@
 class Base {
     [ValidateLength(5,50)]$Title
     [guid]$_id = (New-Guid).guid
-    [long]$CreatedOn = (Get-Date).Ticks
+    [long]$CreatedOn
     [long]$UpdatedOn
     $Tags
     $DbPath = $script:DatabaseLocation
@@ -15,8 +15,6 @@ class Base {
     }
 
     [void] RemoveFromCurrentCollection () {
-        $this.UpdatedOn = (Get-Date).Ticks
-
         Open-LiteDBConnection $this.DbPath
         Remove-LiteDbDocument -Collection "$($this.gettype().name)" -Id $($this._id.guid) | Out-Null
         Close-LiteDBConnection
@@ -46,7 +44,6 @@ class Tasklet : Base {
         $this.Tags = $Tags
         $this.Complexity = $Complexity
         $this._id = (New-Guid).guid
-        $this.UpdatedOn = (Get-Date).Ticks
     }
 
     Tasklet ($Document) {
@@ -55,7 +52,6 @@ class Tasklet : Base {
         $this.Complexity = $Document.Complexity
         $this.Priority = $Document.Priority
         $this.Tags = $Document.Tags
-        $this.UpdatedOn = (Get-Date).Ticks
         $this.RelatedTo = $Document.RelatedTo
     }
 }
@@ -75,7 +71,6 @@ class Rewardlet : Base {
     Rewardlet ($Document) {
         $this.Title = $Document.Title
         $this._id = $Document._id
-        $this.UpdatedOn = (Get-Date).Ticks
         $this.TimeEstimate = $Document.TimeEstimate
         $this.DopamineIndex = $Document.DopamineIndex
         $this.TaskRequirement = $Document.TaskRequirement

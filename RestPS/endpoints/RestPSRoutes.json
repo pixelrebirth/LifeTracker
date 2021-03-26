@@ -1,0 +1,12 @@
+[
+  {
+    "RequestType": "GET",
+    "RequestURL": "/willpower",
+    "RequestCommand": "Add-Countlet -Title Willpower -Tags willpower,ifttt,lifetracker"
+  },
+  {
+    "RequestType": "GET",
+    "RequestURL": "/endpoint/status",
+    "RequestCommand": "return 1"
+  }
+]
