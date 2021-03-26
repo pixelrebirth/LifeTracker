@@ -12,6 +12,9 @@ function New-Tasklet {
     }
     Process {
         $Tasklet = [Tasklet]::new($Title,$Tags,$Complexity)
+        $Tasklet.CreatedOn = (Get-Date).Ticks
+        $Tasklet.UpdatedOn = (Get-Date).Ticks
+        
         if ($RelatedTo){
             $Tasklet.RelatedTo = $RelatedTo
         }
@@ -88,13 +91,13 @@ function Register-TaskletTouch {
     }
     process {
         if ($AllTasklets){
-            Write-Host -ForegroundColor Yellow "`nPlease enter Priority 0,1,2,3,4,5,c,r or press return`n------"
+            Write-Host -ForegroundColor Yellow "`nPlease enter Priority 0,1,2,3,4,5,c,r,s or press return`n------"
             foreach($Index in 0..$($AllTasklets.count-1)){
                 do {
                     $Title = $AllTasklets[$Index].Title
                     $Priority = -1
 
-                    while ($Priority -notin @(0,1,2,3,4,5,"c","r")){
+                    while ($Priority -notin @(0,1,2,3,4,5,"c","r","s")){
                         $Priority  = Read-Host $Title
                         switch ($priority){
                             "c" {
@@ -102,6 +105,9 @@ function Register-TaskletTouch {
                             }
                             "r" {
                                 $AllTasklets[$Index] | Remove-Tasklet
+                            }
+                            "s" {
+                                $AllTasklets[$Index] | Split-Tasklet
                             }
                         }
                     }
@@ -156,7 +162,7 @@ function Complete-Tasklet {
             Write-Output "Tasklet [$($InputObject.title)] Completed"
         }
         catch {
-            Write-Error "Error occurred uploading or deleting object from archive, error: $($error[0].exception.message)"
+            Write-Error "Error with input object, you cannot use -ComplexSort or -PrioritySort on Get-Tasklet."
             Close-LiteDBConnection | Out-Null
         }
     }
@@ -179,7 +185,7 @@ function Remove-Tasklet {
             Write-Output "Tasklet [$($InputObject.title)] Removed"
         }
         catch {
-            Write-Error "Error occurred deleting object from archive, error: $($error[0].exception.message)"
+            Write-Error "Error with input object, you cannot use -ComplexSort or -PrioritySort on Get-Tasklet."
             Close-LiteDBConnection | Out-Null
         }
     }
@@ -209,7 +215,7 @@ function Split-Tasklet {
             Write-Output "Tasklet [$($InputObject.title)] Split"
         }
         catch {
-            Write-Error "Error occurred deleting object from archive, error: $($error[0].exception.message)"
+            Write-Error "Error with input object, you cannot use -ComplexSort or -PrioritySort on Get-Tasklet."
             Close-LiteDBConnection | Out-Null
         }
     }

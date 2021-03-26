@@ -292,3 +292,10 @@ Step 3, register IFTTT to API for each reward
 Step 4, create analytics for checking trends
 Step 5, gamify the rewards to 'deal damage' to 'boss' for 'bosstoken'
 Step 6, create 'bosstoken' high end rewards
+
+I should make a speedreading game where it has you type sentences from a book you want to read. Sentence pops up, `read-host | measure-command` ; you must type it correctly. Increase your time
+
+All gamification bonuses need to be based on standard deviation of reward vs tasking metrics.
+
+These include the following:
+    +-(Reward - Tasking)(stddev) 3,5,8,13,21,34,55,89.... days per category of token
