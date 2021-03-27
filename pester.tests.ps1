@@ -131,6 +131,14 @@ describe "LifeTracker" {
         (Get-Countlet | Where Title -eq "Countlet Entry").Title | Should -Be "Countlet Entry"
     }
 
+    it "Should show deviation metrics from Get-LifeTrackerAnalytics" {
+        $Analytics = Get-LifeTrackerAnalytics
+        $Analytics.TotalDiff | Should -Be -3.899
+        $Analytics.WillpowerTokenDiff | Should -Be -3.328
+        $Analytics.ChronoTokenDiff | Should -Be 0.062
+        $Analytics.TaskTokenDiff | Should -Be -0.633
+    }
+
     AfterAll {
         Remove-Item $script:DatabaseLocation -Force
     }
