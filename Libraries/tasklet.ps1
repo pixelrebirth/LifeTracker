@@ -112,7 +112,10 @@ function Register-TaskletTouch {
                         }
                     }
                     if ($AllTasklets.count -gt 1){
-                        $PerTaskletDecrease = $Priority / ($AllTasklets.count-1)
+                        $PerTaskletDecrease = [math]::round(
+                            $Priority / ($AllTasklets.count-1),
+                            3
+                        )
                     }
                     else {
                         $PerTaskletDecrease = 0
@@ -122,9 +125,15 @@ function Register-TaskletTouch {
                     $Priority -ge 0 -AND $Priority -le 5
                 )
                 
-                $AllTasklets[$Index].Priority += ([int]$Priority + $PerTaskletDecrease)
+                $AllTasklets[$Index].Priority += [math]::round(
+                    ([int]$Priority + $PerTaskletDecrease),
+                    3
+                )
                 foreach($Index in 0..$($AllTasklets.count-1)){
-                    $AllTasklets[$Index].Priority -= $PerTaskletDecrease
+                    $AllTasklets[$Index].Priority -= [math]::round(
+                        $PerTaskletDecrease,
+                        3
+                    )
                 }
             }
         }
