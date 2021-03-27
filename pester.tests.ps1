@@ -108,13 +108,6 @@ describe "LifeTracker" {
         (Get-Habitlet | Where Title -eq "Habit Registry").Title| Should -Be "Habit Registry"
     }
 
-    it "Should output a transaction log with Get-LifetrackerTransaction" {
-        $Transactions = Get-LifeTracker
-        $Transactions.ChronoToken| Should -Be 16
-        $Transactions.TaskToken | Should -Be 16
-        $Transactions.WillpowerToken| Should -Be -7
-    }
-
     it "Should Add-Journlet to the transaction database" {
         Add-Journlet -Title "Journal Entry" -Tags "Test,123" -WritingPrompt "This is a journal entry." | Should -Be "Journlet Registered as Taken"
     }
@@ -137,6 +130,19 @@ describe "LifeTracker" {
         $Analytics.WillpowerTokenDiff | Should -Be -3.328
         $Analytics.ChronoTokenDiff | Should -Be 0.062
         $Analytics.TaskTokenDiff | Should -Be -0.633
+    }
+
+
+    it "Should output a transaction log with Get-LifetrackerTransaction" {
+        $Transactions = Get-LifeTracker
+        $Transactions.ChronoToken| Should -Be 16
+        $Transactions.TaskToken | Should -Be 20
+        $Transactions.WillpowerToken| Should -Be -6
+    }
+
+    it "Should rebuild the transaction table" {
+        Reset-LifeTrackerTransactionCollection -AcceptResponsibility | Should -Be "LifeTracker Level Zero Activated"
+
     }
 
     AfterAll {

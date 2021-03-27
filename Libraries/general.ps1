@@ -64,15 +64,15 @@ function Add-LifeTrackerTransaction {
     [CmdletBinding()]
     param (
         [parameter(Mandatory=$true)]$FunctionName,
-        $TaskToken,
-        $WillpowerToken,
-        $ChronoToken,
-        $Path = $script:DatabaseLocation        
-    )
-    
+            $TaskToken,
+            $WillpowerToken,
+            $ChronoToken,
+            $DbPath = $script:DatabaseLocation        
+        )
+        
     begin {
         Import-Module PSLiteDB | Out-Null
-        Open-LiteDBConnection -Path $Path | Out-Null
+        Open-LiteDBConnection -Path $DbPath | Out-Null
         $Config = Get-LifeTrackerConfig
 
         if (!$TaskToken) {
@@ -143,5 +143,34 @@ function New-TaskletDatabase {
     }
     else {
         return $false
+    }
+}
+
+function Optimize-Database {}
+
+function Reset-LifeTrackerTransactionCollection {
+    [CmdletBinding()]
+    param (
+        [switch]$AcceptResponsibility,
+        $DbPath = $script:DatabaseLocation
+    )
+    
+    begin {
+        if (!$AcceptResponsibility){
+            Write-Output "This is a dangerous cmdlet, you must accept responsibility."
+            # Automatic Backup
+            Break
+        }
+    }
+            
+    process {
+        Open-LiteDBConnection -Path $DbPath | Out-Null
+        Remove-LiteDBCollection "token_transaction" -Confirm:$False
+        New-LiteDBCollection "token_transaction"
+        Close-LiteDBConnection
+    }
+    
+    end {
+        Write-Output "LifeTracker Level Zero Activated"
     }
 }
