@@ -174,3 +174,28 @@ function Reset-LifeTrackerTransactionCollection {
         Write-Output "LifeTracker Level Zero Activated"
     }
 }
+
+function Backup-LifeTrackerDatabase {
+    [CmdletBinding()]
+    param (
+        
+    )
+    
+    begin {
+        $script:DatabaseBackupLocation = $script:DatabaseBackupLocation -replace('\<.*\>',(Get-Date).ticks)
+    }
+    
+    process {
+        try {
+            Copy-Item $script:DatabaseLocation $script:DatabaseBackupLocation
+        }
+        catch {
+            Write-Error "Cannot copy $script:DatabaseLocation to $script:DatabaseBackupLocation"
+            Break
+        }
+    }
+    
+    end {
+        "$script:DatabaseBackupLocation has been created. Thank you."
+    }
+}

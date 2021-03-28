@@ -1,5 +1,6 @@
 $script:LifeTrackerModulePath = $pwd.path
 $script:DatabaseLocation = "./test.db"
+$script:DatabaseBackupLocation = "./test_backups_<date>.db"
 
 describe "LifeTracker" {
     BeforeAll {
@@ -142,10 +143,13 @@ describe "LifeTracker" {
 
     it "Should rebuild the transaction table" {
         Reset-LifeTrackerTransactionCollection -AcceptResponsibility | Should -Be "LifeTracker Level Zero Activated"
+    }
 
+    it "Should make a backup when using internal backup cmdlet" {
+        Backup-LifeTrackerDatabase | Should -match "backups_"
     }
 
     AfterAll {
-        Remove-Item $script:DatabaseLocation -Force
+        Remove-Item ./*.db -Force
     }
 }
