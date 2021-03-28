@@ -182,12 +182,20 @@ function Backup-LifeTrackerDatabase {
     )
     
     begin {
+        $Directory = (Get-ChildItem $script:DatabaseBackupLocation -EA 0).directory
+        $LastBackup = Get-ChildItem $Directory *.db | where lastwritetime -gt (get-date).adddays(-1)
         $script:DatabaseBackupLocation = $script:DatabaseBackupLocation -replace('\<.*\>',(Get-Date).ticks)
     }
     
     process {
         try {
-            Copy-Item $script:DatabaseLocation $script:DatabaseBackupLocation
+            if (!$LastBackup){
+                Copy-Item $script:DatabaseLocation $script:DatabaseBackupLocation
+            }
+            else {
+                Write-Output "No backup necessary!"
+                Break
+            }
         }
         catch {
             Write-Error "Cannot copy $script:DatabaseLocation to $script:DatabaseBackupLocation"

@@ -146,7 +146,9 @@ describe "LifeTracker" {
     }
 
     it "Should make a backup when using internal backup cmdlet" {
-        Backup-LifeTrackerDatabase | Should -match "backups_"
+        Backup-LifeTrackerDatabase 
+        (Get-ChildItem *backups*).count | Should -Be 1
+        Backup-LifeTrackerDatabase | Should -Be "No backup necessary!"
     }
 
     AfterAll {
