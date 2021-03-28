@@ -1,6 +1,6 @@
 {
     "DatabaseLocation":             "C:\\LifeTracker\\LifeTracker.db",
-    "DatabaseBackupLocation":       "E:\\Other\\PS_Scripts\\Backups\\LifeTracker_Backup_<date>.db",
+    "DatabaseBackupLocation":       "E:\\Other\\PS_Scripts\\Backups\\",
     "TransactionRatio": {
         "New-Tasklet":              "0:0:4",
         "New-Rewardlet":            "0:0:5",

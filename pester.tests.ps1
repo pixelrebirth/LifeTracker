@@ -1,6 +1,6 @@
 $script:LifeTrackerModulePath = $pwd.path
 $script:DatabaseLocation = "./test.db"
-$script:DatabaseBackupLocation = "./test_backups_<date>.db"
+$script:DatabaseBackupLocation = "./"
 
 describe "LifeTracker" {
     BeforeAll {
