@@ -37,8 +37,9 @@ function Get-Tasklet {
     )
     
     begin {
-        
         Import-Module PSLiteDB | Out-Null
+        Backup-LifeTrackerDatabase
+
         $OutputArray = @()
         Open-LiteDBConnection $script:DatabaseLocation | Out-Null
     }
@@ -59,16 +60,16 @@ function Get-Tasklet {
         Close-LiteDBConnection | Out-Null
         if ($OutputArray){
             if ($PrioritySort -AND $ComplexSort){
-                $OutputArray | Sort Priority -Descending  | sort priority,complexity,title |  select title,priority,complexity
+                $OutputArray | sort priority,complexity,title -Descending |  select title,priority,complexity
             }
             elseif ($PrioritySort){
-                $OutputArray | Sort Priority -Descending  | sort priority,title |  select title,priority
+                $OutputArray | sort priority,title  -Descending |  select title,priority
             }
             elseif ($ComplexSort){
-                $OutputArray | Sort Priority -Descending  | sort complexity,title |  select title,complexity
+                $OutputArray | sort complexity,title |  select title,complexity
             }
             else {
-                $OutputArray | Sort Priority -Descending
+                $OutputArray | Sort priority
             }
         }
         else {
@@ -110,6 +111,9 @@ function Register-TaskletTouch {
                                 $AllTasklets[$Index] | Split-Tasklet
                             }
                         }
+                    }
+                    if ($Priority -notin @(1,2,3,4,5)){
+                        $Priority = 0
                     }
                     if ($AllTasklets.count -gt 1){
                         $PerTaskletDecrease = [math]::round(
