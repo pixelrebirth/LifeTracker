@@ -8,6 +8,9 @@ describe "LifeTracker" {
         $AllFiles | ForEach {. $Input}
     
         Import-Module PSLiteDB
+
+        $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+        $admin = !($currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
     }
 
     it "Should create a database for the App" {
@@ -48,8 +51,8 @@ describe "LifeTracker" {
     }
 
     it "Should upload a new rewardlet" {
-        New-Rewardlet -Title "More Testing" -Touch 3 -Taste 1 -Hear 8 -Smell 1 -Sight 13 -Time 8 | should -Be "Rewardlet Created"
-        New-Rewardlet -Title "Testing Reward" -Touch 8 -Taste 1 -Hear 5 -Smell 3 -Sight 5 -Time 5 | should -Be "Rewardlet Created"
+        New-Rewardlet -Title "More Testing" -TimeEstimate 3 -DopamineIndex 13 -TaskRequirement 2 | should -Be "Rewardlet Created"
+        New-Rewardlet -Title "Testing Reward" -TimeEstimate 8 -DopamineIndex 3 -TaskRequirement 3 | should -Be "Rewardlet Created"
     }
 
     it "Should Add-Rewardlet to the transaction database" {
@@ -59,17 +62,17 @@ describe "LifeTracker" {
     it "Should be able to pull an available rewarlet" {
         $Rewardlet = Get-Rewardlet | Where Title -eq "Testing Reward"
         ($Rewardlet).Title | Should -Be "Testing Reward"
-        ($Rewardlet).TaskRequirement | Should -Be 6
+        ($Rewardlet).TaskRequirement | Should -Be 3
 
         $Rewardlet = Get-Rewardlet | Where Title -eq "More Testing"
         ($Rewardlet).Title | Should -Be "More Testing"
-        ($Rewardlet).TaskRequirement | Should -Be 8
+        ($Rewardlet).TaskRequirement | Should -Be 2
     }
 
     it "Should be able to pull a list of rewardlet transactions" {
         $Transaction = Get-RewardletTransaction | Where Title -eq "Testing Reward"
-        $Transaction.TimeEstimate | should -Be 5
-        $Transaction.DopamineIndex | should -Be 16
+        $Transaction.TimeEstimate | should -Be 8
+        $Transaction.DopamineIndex | should -Be 3
         $Transaction.Title | should -Be "Testing Reward"
     }
     
@@ -92,7 +95,7 @@ describe "LifeTracker" {
     }
 
     it "Should show sums for Get-LifeTracker" {
-        (Get-LifeTracker).WillpowerToken | Should -Be -11
+        (Get-LifeTracker).WillpowerToken | Should -Be 2
     }
 
     it "Should upload a New-Habitlet" {
@@ -127,18 +130,18 @@ describe "LifeTracker" {
 
     it "Should show deviation metrics from Get-LifeTrackerAnalytics" {
         $Analytics = Get-LifeTrackerAnalytics
-        $Analytics.TotalDiff | Should -Be -3.899
-        $Analytics.WillpowerTokenDiff | Should -Be -3.328
-        $Analytics.ChronoTokenDiff | Should -Be 0.062
-        $Analytics.TaskTokenDiff | Should -Be -0.633
+        $Analytics.TotalDiff | Should -Be -0.035
+        $Analytics.WillpowerTokenDiff | Should -Be 0.425
+        $Analytics.ChronoTokenDiff | Should -Be -0.887
+        $Analytics.TaskTokenDiff | Should -Be 0.427
     }
 
 
     it "Should output a transaction log with Get-LifetrackerTransaction" {
         $Transactions = Get-LifeTracker
-        $Transactions.ChronoToken| Should -Be 16
-        $Transactions.TaskToken | Should -Be 20
-        $Transactions.WillpowerToken| Should -Be -6
+        $Transactions.ChronoToken| Should -Be 13
+        $Transactions.TaskToken | Should -Be 23
+        $Transactions.WillpowerToken| Should -Be 7
     }
 
     it "Should rebuild the transaction table" {
@@ -148,6 +151,14 @@ describe "LifeTracker" {
     it "Should make a backup when using internal backup cmdlet" {
         Backup-LifeTrackerDatabase 
         (Get-ChildItem *backup*).count | Should -Be 1
+    }
+
+    it "Should get a 1 from restful call to 127.0.0.1:8088/status" {
+        Start-LifeTrackerRestApi
+        Start-Sleep 1
+
+        Invoke-RestMethod -Uri 127.0.0.1:8088/endpoint/status | Should -Be 1
+        Get-Job | Stop-Job
     }
 
     AfterAll {

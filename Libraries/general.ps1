@@ -202,3 +202,26 @@ function Backup-LifeTrackerDatabase {
 
     }
 }
+
+function Start-LifeTrackerRestApi {
+    [CmdletBinding()]
+    param (
+        $Path = "$PSScriptPath/RestPS/endpoints/RestPSRoutes.json",
+        $Port = 8088
+    )
+    
+    begin {
+        Import-Module RestPS -force
+    }
+    
+    process {
+        Start-Job {
+            Param($Path,$Port)
+            Start-RestPSListener -RoutesFilePath $Path -Port $Port
+        } -ArgumentList $Path,$Port
+    }
+    
+    end {
+        
+    }
+}

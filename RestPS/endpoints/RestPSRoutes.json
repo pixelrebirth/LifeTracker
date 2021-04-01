@@ -6,7 +6,7 @@
   },
   {
     "RequestType": "GET",
-    "RequestURL": "/endpoint/status",
+    "RequestURL": "/status",
     "RequestCommand": "return 1"
   }
 ]

@@ -299,3 +299,6 @@ All gamification bonuses need to be based on standard deviation of reward vs tas
 
 These include the following:
     +-(Reward - Tasking)(stddev) 3,5,8,13,21,34,55,89.... days per category of token
+
+Tartus Mapping CODE Page
+1. 
