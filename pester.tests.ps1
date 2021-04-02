@@ -157,7 +157,7 @@ describe "LifeTracker" {
         Start-LifeTrackerRestApi
         Start-Sleep 1
 
-        Invoke-RestMethod -Uri 127.0.0.1:8088/endpoint/status | Should -Be 1
+        Invoke-RestMethod -Uri 127.0.0.1:8088/status | Should -Be 1
         Get-Job | Stop-Job
     }
 
