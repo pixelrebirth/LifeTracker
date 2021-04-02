@@ -41,10 +41,12 @@ function Get-Tasklet {
         Backup-LifeTrackerDatabase
 
         $OutputArray = @()
+        
         Open-LiteDBConnection $script:DatabaseLocation | Out-Null
+        $GetDocuments = Find-LiteDBDocument -Collection "tasklet"
+        Close-LiteDBConnection | Out-Null
     }
     process {
-        $GetDocuments = Find-LiteDBDocument -Collection "tasklet"
         if ($Tags){
             $GetDocuments = $GetDocuments | where Tags -Contain $Tags
         }
@@ -57,7 +59,6 @@ function Get-Tasklet {
         }
     }
     end {
-        Close-LiteDBConnection | Out-Null
         if ($OutputArray){
             if ($PrioritySort -AND $ComplexSort){
                 $OutputArray | sort priority,complexity,title -Descending |  select title,priority,complexity
@@ -155,12 +156,24 @@ function Register-TaskletTouch {
 }
 
 function Update-Tasklet {
+    [cmdletbinding()]
+    [Alias("ut")]
     param(
-        $Title,
-        $Tags
+        [parameter(Mandatory = $true,ValueFromPipelineByPropertyName=$true)]$_id,
+        $Title
     )
-    #Using input object, rehydrate the object and invoke update-litedbdocument
+    begin{
+        
+    }
+    process {
+        $Tasklet = Get-Tasklet | where _id -eq $_id
+        $Tasklet.Title = $Title
+    }
+    end {
+        $Tasklet.UpdateCollection('tasklet')
+    }
 }
+
 function Complete-Tasklet {
     [cmdletbinding()]
     [Alias("ct")]

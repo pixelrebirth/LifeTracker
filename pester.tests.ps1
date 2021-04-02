@@ -20,12 +20,17 @@ describe "LifeTracker" {
 
     it "New-Tasklet uploads a document to DB" {
         New-Tasklet -Title "Another Tasklet" -Tags "Test,123" -Complexity 21 | Should -Be "Tasklet Saved"
-        New-Tasklet -Title "Testing 123" -Tags "123" -Complexity 8 | Should -Be "Tasklet Saved"
+        New-Tasklet -Title "Testing 567" -Tags "123" -Complexity 8 | Should -Be "Tasklet Saved"
     }
 
     it "Get-Tasklet returns created tasklet" {
         (Get-Tasklet -PrioritySort -ComplexSort -Tags "Test").Title | Should -Be "Another Tasklet"
-        (Get-Tasklet | where title -eq "Testing 123").Title | Should -Be "Testing 123"
+        (Get-Tasklet | where title -eq "Testing 567").Title | Should -Be "Testing 567"
+    }
+
+    it "Should update the tasklet title when piped to Update-Tasklet" {
+        Get-Tasklet -Match "Testing 567" | Update-Tasklet -Title "Testing 123"
+        Get-Tasklet -Match "Testing 123" | Should -Be $true
     }
 
     it "Register-TaskletTouch allocates 50 to Priority when Read-Host is 3" {
