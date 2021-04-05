@@ -302,3 +302,7 @@ These include the following:
 
 Tartus Mapping CODE Page
 1. 
+
+Timelet is marked when doing something worth doing time for, if you assume all good time is marked, you can assume the bad time--- while this might not be the strongest of analytics, it is in fact data to be evaluated
+
+All timelets should be things we want to be doing, specfic things, not `work`, `IaC Policy Writing`

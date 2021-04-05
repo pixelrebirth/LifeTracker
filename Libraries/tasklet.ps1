@@ -9,6 +9,9 @@ function New-Tasklet {
     )
     Begin{
         $Tags = @($Tags.split(','))
+        if ($Title -match 'date'){
+            $Title = Read-Host "Title cannot have date, retry"
+        }
     }
     Process {
         $Tasklet = [Tasklet]::new($Title,$Tags,$Complexity)
@@ -160,14 +163,25 @@ function Update-Tasklet {
     [Alias("ut")]
     param(
         [parameter(Mandatory = $true,ValueFromPipelineByPropertyName=$true)]$_id,
-        $Title
+        $Title,
+        $Complexity,
+        $Priority,
+        $CreatedOn,
+        $UpdatedOn,
+        $RelatedTo
+
     )
     begin{
         
     }
     process {
         $Tasklet = Get-Tasklet | where _id -eq $_id
-        $Tasklet.Title = $Title
+        if ($Title) {$Tasklet.Title = $Title}
+        if ($Complexity) {$Tasklet.Complexity = $Complexity}
+        if ($Priority)  {$Tasklet.Priority = $Priority}
+        if ($CreatedOn) {$Tasklet.CreatedOn = $CreatedOn}
+        if ($UpdatedOn) {$Tasklet.UpdatedOn = $UpdatedOn}
+        if ($RelatedTo) {$Tasklet.RelatedTo = $RelatedTo}
     }
     end {
         $Tasklet.UpdateCollection('tasklet')

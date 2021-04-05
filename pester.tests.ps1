@@ -29,8 +29,8 @@ describe "LifeTracker" {
     }
 
     it "Should update the tasklet title when piped to Update-Tasklet" {
-        Get-Tasklet -Match "Testing 567" | Update-Tasklet -Title "Testing 123"
-        Get-Tasklet -Match "Testing 123" | Should -Be $true
+        Get-Tasklet -Match "Testing 567" | Update-Tasklet -Title "Testing 123" -Complexity 5
+        (Get-Tasklet -Match "Testing 123").Complexity | Should -Be 5
     }
 
     it "Register-TaskletTouch allocates 50 to Priority when Read-Host is 3" {
@@ -159,10 +159,10 @@ describe "LifeTracker" {
     }
 
     it "Should get a 1 from restful call to 127.0.0.1:8088/status" {
-        Start-LifeTrackerRestApi
+        Start-LifeTrackerRestApi -Port 8089
         Start-Sleep 1
 
-        Invoke-RestMethod -Uri 127.0.0.1:8088/status | Should -Be 1
+        Invoke-RestMethod -Uri 127.0.0.1:8089/status | Should -Be 1
         Get-Job | Stop-Job
     }
 
