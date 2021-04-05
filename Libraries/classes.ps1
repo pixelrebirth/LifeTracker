@@ -53,6 +53,8 @@ class Tasklet : Base {
         $this.Priority = $Document.Priority
         $this.Tags = $Document.Tags
         $this.RelatedTo = $Document.RelatedTo
+        $this.CreatedOn = $Document.CreatedOn
+        $this.UpdatedOn = $Document.UpdatedOn
     }
 }
 

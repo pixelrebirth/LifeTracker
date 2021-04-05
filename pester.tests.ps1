@@ -25,7 +25,7 @@ describe "LifeTracker" {
 
     it "Get-Tasklet returns created tasklet" {
         (Get-Tasklet -PrioritySort -ComplexSort -Tags "Test").Title | Should -Be "Another Tasklet"
-        (Get-Tasklet | where title -eq "Testing 567").Title | Should -Be "Testing 567"
+        (Get-Tasklet | where title -eq "Testing 567").CreatedOn | Should -Not -Be 0
     }
 
     it "Should update the tasklet title when piped to Update-Tasklet" {
