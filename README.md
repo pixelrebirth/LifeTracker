@@ -306,3 +306,5 @@ Tartus Mapping CODE Page
 Timelet is marked when doing something worth doing time for, if you assume all good time is marked, you can assume the bad time--- while this might not be the strongest of analytics, it is in fact data to be evaluated
 
 All timelets should be things we want to be doing, specfic things, not `work`, `IaC Policy Writing`
+
+Chain game where each lifetracker type is required and chain data is stored for each, analytics book.Color display could be used to alert the use to update LifeTracker, like the background or something very obvious. You could earn points for each current chain and see your score over the day.. the +/- diff on LifeTrackerAnalytics could be a multiplier (formula pending). It could check the history of commands in the transaction tables; refirming the idea of having everything write to that table, every external cmdlet should have a means to update the score. I am also making the decision to clear the screen and take over keyboard, this will give me much more control over the systems, it needs to be SSH friendly. Stats view.

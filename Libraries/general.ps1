@@ -207,7 +207,7 @@ function Start-LifeTrackerRestApi {
     [CmdletBinding()]
     param (
         $Path = "$script:LifeTrackerModulePath/RestPS/endpoints/RestPSRoutes.json",
-        $Port = 8088
+        $Port = 1001
     )
     
     begin {
