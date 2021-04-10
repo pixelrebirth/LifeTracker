@@ -8,9 +8,9 @@
         "New-Timelet":              "0:4:0",
         "Add-Rewardlet":            "5:0:0",
         "Add-Timelet":              "2:2:0",
-        "Add-Habitlet":             "4:1:0",
+        "Add-Habitlet":             "4:0:0",
         "Add-Journlet":             "0:0:3",
-        "Add-Countlet":             "1:0:1",
+        "Add-Countlet":             "1:1:1",
         "Complete-Tasklet":         "3:0:0",
         "Register-TaskletTouch":    "0:0:2",
         "Split-Tasklet":            "0:3:0"

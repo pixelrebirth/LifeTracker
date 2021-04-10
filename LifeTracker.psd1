@@ -89,6 +89,7 @@ FunctionsToExport = @(
     "Get-Habitlet",
     'Add-Habitlet',
     'Get-LifeTracker',
+    'Get-LifeTrackerAnalytics',
     'Add-Journlet',
     'Get-Journlet',
     'Add-Countlet',

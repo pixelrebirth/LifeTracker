@@ -75,13 +75,14 @@ function Add-LifeTrackerTransaction {
         Open-LiteDBConnection -Path $DbPath | Out-Null
         $Config = Get-LifeTrackerConfig
 
-        if (!$TaskToken) {
+        $CheckState = !$TaskToken -OR !$WillpowerToken -OR !$ChronoToken
+        if ($CheckState) {
             $TransactionRatio = $Config.TransactionRatio.$FunctionName.split(':')
         }
     }
     
     process {
-        if (!$TaskToken) {
+        if ($CheckState) {
             $Data = [PSCustomObject]@{
                 Cmdlet            = $FunctionName
                 WillpowerToken    = $TransactionRatio[0]

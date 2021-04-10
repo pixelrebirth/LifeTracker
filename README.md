@@ -308,3 +308,41 @@ Timelet is marked when doing something worth doing time for, if you assume all g
 All timelets should be things we want to be doing, specfic things, not `work`, `IaC Policy Writing`
 
 Chain game where each lifetracker type is required and chain data is stored for each, analytics book.Color display could be used to alert the use to update LifeTracker, like the background or something very obvious. You could earn points for each current chain and see your score over the day.. the +/- diff on LifeTrackerAnalytics could be a multiplier (formula pending). It could check the history of commands in the transaction tables; refirming the idea of having everything write to that table, every external cmdlet should have a means to update the score. I am also making the decision to clear the screen and take over keyboard, this will give me much more control over the systems, it needs to be SSH friendly. Stats view.
+
+Elements of LifeChain
+
+Individual LifeTrackerType per cmdlet noun, get-* verbs
+Chains per LifeTrackerType tracked separately
+
+--- UI ---
+
+
+Bonus Challenge: [Split or Complete (Create a UI for LifeTracker)]
+Scheduled Time:  [Coding Personal Project] 
+
+WillpowerToken: [0047|+1.223]
+ChronoToken:    [0012|+4.553]
+TaskToken:      [0138|-2.112]
+TotalDiff:      [-197|+3.332]
+
+Tasklet   [0005]:[*****  ** * ****  ****|  * * *** *]
+Habitlet  [0007]:[** *** ***** ** *  ***|    *******]
+Rewardlet [0004]:[**** * ***      ****  |*          ]
+Journlet  [0002]:[** *                              ]
+Timelet   [0004]:[* **** ***                        ]
+Countlet  [0002]:[* **  * *                         ]
+--------
+BossToken [0002]:[+  +                  |           ]
+Coins     [2442]
+
+Press [P] to cycle, [C] to purchase one of the following:
+
+(Bronze[10]...Silver[100]...Gold[1000]...Platinum[10000])
+
+--- END ---
+
+
+reward types are stored in rewardlet collection
+rewards to take are in rewardlet_transaction
+once they have been taken, they move to rewardlet_archive
+
