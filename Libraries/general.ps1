@@ -226,3 +226,125 @@ function Start-LifeTrackerRestApi {
         
     }
 }
+
+function Start-LifeTrackerGui {
+    param()
+    begin {
+
+    }
+    process {
+        while ($KeyPress -ne "g"){
+            Clear-Host
+            
+            $Challenge = ""
+            $ScheduledActivity = ""
+            
+            $WillpowerToken += 1
+            $WillpowerDiff = 0
+            $ChronoToken = 0
+            $ChronoDiff = 0
+            $TaskToken = 0
+            $TaskDiff = 0
+            $TotalToken = 0
+            $TotalDiff = 0
+            
+            $TaskStreak = 0
+            $TaskDots = ""
+            $HabitStreak = 0
+            $HabitDots = ""
+            $RewardStreak = 0
+            $RewardDots = ""
+            $JournalStreak = 0
+            $JournalDots = ""
+            $TimeStreak = 0
+            $TimeDots = ""
+            $CountStreak = 0
+            $CountDots = ""
+            
+            $BossToken = 0
+            $BossDots = ""
+            
+            $Coins = 0
+            
+            Write-Output "
+            ----- [LIFETRACKER] -----
+            
+            Bonus Challenge: [$Challenge]
+            Scheduled Time:  [$ScheduledActivity]
+            
+            WillpowerToken: [$WillpowerToken|$WillpowerDiff]
+            ChronoToken:    [$ChronoToken|$ChronoDiff]
+            TaskToken:      [$TaskToken|$TaskDiff]
+            TotalDiff:      [$TotalToken|$TotalDiff]
+            
+            Tasklet   [$TaskStreak]:[$TaskDots]
+            Habitlet  [$HabitStreak]:[$HabitDots]
+            Rewardlet [$RewardStreak]:[$RewardDots]
+            Journlet  [$JournalStreak]:[$JournalDots]
+            Timelet   [$TimeStreak]:[$TimeDots]
+            Countlet  [$CountStreak]:[$CountDots]
+            
+            BossToken [$BossToken]:[$BossDots]
+            Coins     [$Coins]
+        
+            ----- [KEYBINDINGS] -----
+
+            [A] New-Tasklet
+            [W] Get-Tasklet
+            [S] Register-TaskletTouch
+            [D] Add-Journlet
+
+            [Z] Willpower
+            [X] Box Breathing
+            [C] Observation Self
+
+            [Q] Add-Habitlet
+
+            [1] Buy Reward Spin
+            [2] Consume Reward
+            [3] Challenge Complete
+            [4] Scheduled Time Used
+
+            [G] Quit
+            
+            ----- [END] -----
+            "
+
+            $Regex = '1|2|3|4|q|w|e|r|a|s|d|f|g|z|x|c' 
+            $HostOutput = $null
+            
+            if ($KeyPress -match $Regex) {
+                $HostOutput = switch ($KeyPress){
+                    "a" {New-Tasklet}
+                    "w" {Get-Tasklet -ComplexSort -PrioritySort -Tags "$(Read-Host Tags)"} # Needed a return character after tags
+                    "s" {Register-TaskletTouch -Tags "$(Read-Host Tags)"}
+                    "d" {Add-Journlet}
+                    
+                    "z" {Add-Countlet -Title "Willpower" -Tags 'willpower'}
+                    "x" {Add-Countlet -Title "Box Breathe" -Tags 'box-breathe'}
+                    "c" {Add-Countlet -Title "Observation Self" -Tags 'observation-self'}
+                    
+                    "q" {}
+                    "e" {}
+                    "r" {}
+                    "f" {}
+                    
+                    "g" {break}
+                }
+                
+                Clear-Host
+                Start-Sleep -Milliseconds 250
+                
+                Write-Output $HostOutput
+                Read-Host "`nPress return to continue"
+                Continue
+            }
+            Start-Sleep -Milliseconds 250
+            $KeyPress = Get-KeyPress -Message "LifeTracker:>" -timeOutMilliSeconds 10000 -regexPattern $Regex
+
+        }        
+    }
+    end {
+ 
+    }   
+}

@@ -318,12 +318,12 @@ Chains per LifeTrackerType tracked separately
 
 
 Bonus Challenge: [Split or Complete (Create a UI for LifeTracker)]
-Scheduled Time:  [Coding Personal Project] 
+Scheduled Time:  [Coding Personal Project]
 
-WillpowerToken: [0047|+1.223]
-ChronoToken:    [0012|+4.553]
-TaskToken:      [0138|-2.112]
-TotalDiff:      [-197|+3.332]
+WillpowerToken: [0098|+0.751]
+ChronoToken:    [0005|+0.000]
+TaskToken:      [0228|+1.031]
+TotalDiff:      [0326|+1.782]
 
 Tasklet   [0005]:[*****  ** * ****  ****|  * * *** *]
 Habitlet  [0007]:[** *** ***** ** *  ***|    *******]
