@@ -189,7 +189,7 @@ function Backup-LifeTrackerDatabase {
     
     process {
         try {
-            if ($LastBackup.count -ne 1){
+            if ($LastBackup.count -eq 0){
                 Copy-Item $script:DatabaseLocation $Path
                 "$Path has been created. Thank you."
             }
@@ -235,35 +235,24 @@ function Start-LifeTrackerGui {
     process {
         while ($KeyPress -ne "g"){
             Clear-Host
-            
+
             $Challenge = ""
             $ScheduledActivity = ""
             
-            $WillpowerToken += 1
-            $WillpowerDiff = 0
-            $ChronoToken = 0
-            $ChronoDiff = 0
-            $TaskToken = 0
-            $TaskDiff = 0
-            $TotalToken = 0
-            $TotalDiff = 0
+            $LifeTracker = Get-LifeTracker
+            $LifeTrackerAnalytics = Get-LifeTrackerAnalytics
+
+            $WillpowerToken = $LifeTracker.WillpowerToken
+            $WillpowerDiff = $LifeTrackerAnalytics.WillpowerTokenDiff
+            $ChronoToken = $LifeTracker.ChronoToken
+            $ChronoDiff = $LifeTrackerAnalytics.ChronoTokenDiff
+            $TaskToken = $LifeTracker.TaskToken
+            $TaskDiff = $LifeTrackerAnalytics.TaskTokenDiff
+            $TotalToken = $LifeTracker.WillpowerToken + $LifeTracker.ChronoToken + $LifeTracker.TaskToken
+            $TotalDiff = $LifeTrackerAnalytics.TotalDiff
             
-            $TaskStreak = 0
-            $TaskDots = ""
-            $HabitStreak = 0
-            $HabitDots = ""
-            $RewardStreak = 0
-            $RewardDots = ""
-            $JournalStreak = 0
-            $JournalDots = ""
-            $TimeStreak = 0
-            $TimeDots = ""
-            $CountStreak = 0
-            $CountDots = ""
-            
-            $BossToken = 0
-            $BossDots = ""
-            
+            $StreakData = Get-LifeTrackerStreakData
+
             $Coins = 0
             
             Write-Output "
@@ -277,14 +266,15 @@ function Start-LifeTrackerGui {
             TaskToken:      [$TaskToken|$TaskDiff]
             TotalDiff:      [$TotalToken|$TotalDiff]
             
-            Tasklet   [$TaskStreak]:[$TaskDots]
-            Habitlet  [$HabitStreak]:[$HabitDots]
-            Rewardlet [$RewardStreak]:[$RewardDots]
-            Journlet  [$JournalStreak]:[$JournalDots]
-            Timelet   [$TimeStreak]:[$TimeDots]
-            Countlet  [$CountStreak]:[$CountDots]
+            Tasklet   [$($StreakData.TaskStreak)]:[$($StreakData.TaskDots)]
+            Habitlet  [$($StreakData.HabitStreak)]:[$($StreakData.HabitDots)]
+            Rewardlet [$($StreakData.RewardStreak)]:[$($StreakData.RewardDots)]
+            Journlet  [$($StreakData.JournStreak)]:[$($StreakData.JournDots)]
+            Timelet   [$($StreakData.TimeStreak)]:[$($StreakData.TimeDots)]
+            Countlet  [$($StreakData.CountStreak)]:[$($StreakData.CountDots)]
             
-            BossToken [$BossToken]:[$BossDots]
+            BossToken [$($StreakData.BossToken)]:[$($StreakData.BossDots)]
+            Experience    []
             Coins     [$Coins]
         
             ----- [KEYBINDINGS] -----
@@ -297,8 +287,12 @@ function Start-LifeTrackerGui {
             [Z] Willpower
             [X] Box Breathing
             [C] Observation Self
+            [R] Refresh Screen
 
             [Q] Add-Habitlet
+            [E] Add-Timelet
+            [R] Refresh
+            [F] Focus Mode
 
             [1] Buy Reward Spin
             [2] Consume Reward
@@ -312,11 +306,15 @@ function Start-LifeTrackerGui {
 
             $Regex = '1|2|3|4|q|w|e|r|a|s|d|f|g|z|x|c' 
             $HostOutput = $null
+
+            $KeyPress = Get-KeyPress -Message "LifeTracker:>" -timeOutMilliSeconds 30000 -regexPattern $Regex
+            Clear-Host
+            Start-Sleep -Milliseconds 250
             
             if ($KeyPress -match $Regex) {
                 $HostOutput = switch ($KeyPress){
                     "a" {New-Tasklet}
-                    "w" {Get-Tasklet -ComplexSort -PrioritySort -Tags "$(Read-Host Tags)"} # Needed a return character after tags
+                    "w" {Get-Tasklet -ComplexSort -PrioritySort -Tags "$(Read-Host Tags)"}
                     "s" {Register-TaskletTouch -Tags "$(Read-Host Tags)"}
                     "d" {Add-Journlet}
                     
@@ -324,27 +322,52 @@ function Start-LifeTrackerGui {
                     "x" {Add-Countlet -Title "Box Breathe" -Tags 'box-breathe'}
                     "c" {Add-Countlet -Title "Observation Self" -Tags 'observation-self'}
                     
-                    "q" {}
-                    "e" {}
-                    "r" {}
-                    "f" {}
+                    "q" {Add-Habitlet -Match "$(Read-Host Match)"}
+                    "e" {Add-Timelet -Match "$(Read-Host Match)"}
+                    "r" {} #Used for refresh
+                    "f" {Set-LifetrackerFocus}
                     
+                    "1" {Invoke-LifeTrackerSpin}
+                    "2" {Receive-Rewardlet}
+                    "3" {Complete-Challangelet}
+                    "4" {Add-LifeTrackerSchedule -Type Daily}
+
                     "g" {break}
                 }
-                
-                Clear-Host
-                Start-Sleep -Milliseconds 250
-                
+                              
                 Write-Output $HostOutput
                 Read-Host "`nPress return to continue"
                 Continue
             }
             Start-Sleep -Milliseconds 250
-            $KeyPress = Get-KeyPress -Message "LifeTracker:>" -timeOutMilliSeconds 10000 -regexPattern $Regex
-
         }        
     }
     end {
  
     }   
+}
+
+function Get-LifeTrackerStreakData {
+    [CmdletBinding()]
+    param (
+        
+    )
+    
+    begin {
+        #Create CMDLET type list dynamically somehow
+        #Create $Output
+    }
+    
+    process {
+        #Each hour, I need to register each of the types
+        #This data is in the token_transaciton table already
+        #Pull each hour chunk from the data and see foreach cmdlet noun used at least once
+        #Foreach make sure there is a * in the string EX: "*** * * ** *** *  * *   * **"
+            #You will need to track the streak here, if ($CountWithNoBreak -gt $Streak){$Streak = $CountCountWithNoBreak;$Streak++;$}else{$CountWithNoBreak = 0; $Streak = 0}
+        #Go back 24 hours
+    }
+    
+    end {
+        #Output
+    }
 }

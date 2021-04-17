@@ -158,7 +158,7 @@ describe "LifeTracker" {
         (Get-ChildItem *backup*).count | Should -Be 1
     }
 
-    it "Should get a 1 from restful call to 127.0.0.1:8088/status" {
+    it "Should get a 1 from restful call to 127.0.0.1:8089/status" {
         Start-LifeTrackerRestApi -Port 8089
         Start-Sleep 1
 
