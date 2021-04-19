@@ -61,26 +61,36 @@ describe "LifeTracker" {
     }
 
     it "Should Add-Rewardlet to the transaction database" {
-        Add-Rewardlet -Title "Testing Reward" | Should -Be "Rewardlet Registered as Taken"
+        Add-Rewardlet -Title "Testing Reward" | Should -Be "Rewardlet [Testing Reward] Award Won"
     }
 
     it "Should be able to pull an available rewarlet" {
         $Rewardlet = Get-Rewardlet | Where Title -eq "Testing Reward"
         ($Rewardlet).Title | Should -Be "Testing Reward"
         ($Rewardlet).TaskRequirement | Should -Be 3
-
-        $Rewardlet = Get-Rewardlet | Where Title -eq "More Testing"
-        ($Rewardlet).Title | Should -Be "More Testing"
-        ($Rewardlet).TaskRequirement | Should -Be 2
     }
 
-    it "Should be able to pull a list of rewardlet transactions" {
-        $Transaction = Get-RewardletTransaction | Where Title -eq "Testing Reward"
+    it "Should be able to pull a list of awarded rewardlets" {
+        $Transaction = Get-Rewardlet -Type 'awarded' | Where Title -eq "Testing Reward"
         $Transaction.TimeEstimate | should -Be 8
         $Transaction.DopamineIndex | should -Be 3
         $Transaction.Title | should -Be "Testing Reward"
     }
     
+    it "Should move to rewardlet_transaction from awarded" {
+        Receive-Rewardlet -Title "Testing Reward" | Should -Be "Rewardlet [Testing Reward] Award Received"
+    }
+
+    it "Should be able to pull a list of awarded rewardlets" {
+        (Get-Rewardlet -Type 'awarded' | Where Title -eq "Testing Reward").count | Should -Be 0
+        (Get-Rewardlet | Where Title -eq "Testing Reward").count | Should -Be 1
+        
+        $Transaction = Get-Rewardlet -Type 'transaction' | Where Title -eq "Testing Reward"
+        $Transaction.TimeEstimate | should -Be 8
+        $Transaction.DopamineIndex | should -Be 3
+        $Transaction.Title | should -Be "Testing Reward"
+    }
+
     it "Should upload a New-Timelet" {
         New-Timelet -Title "Time Registry" -Tags "Testing" | should -Be "Timelet Created"
         New-Timelet -Title "Time Check" -Tags "Testing" | should -Be "Timelet Created"
@@ -100,7 +110,7 @@ describe "LifeTracker" {
     }
 
     it "Should show sums for Get-LifeTracker" {
-        (Get-LifeTracker).WillpowerToken | Should -Be 2
+        (Get-LifeTracker).WillpowerToken | Should -Be 7
     }
 
     it "Should upload a New-Habitlet" {
@@ -135,10 +145,9 @@ describe "LifeTracker" {
 
     it "Should show deviation metrics from Get-LifeTrackerAnalytics" {
         $Analytics = Get-LifeTrackerAnalytics
-        $Analytics.TotalDiff | Should -Be -0.035
-        $Analytics.WillpowerTokenDiff | Should -Be 0.425
-        $Analytics.ChronoTokenDiff | Should -Be -0.887
-        $Analytics.TaskTokenDiff | Should -Be 0.427
+        $Analytics.WillpowerTokenDiff | Should -Be 0.715
+        $Analytics.ChronoTokenDiff | Should -Be -0.769
+        $Analytics.TaskTokenDiff | Should -Be 0.488
     }
 
 
@@ -146,7 +155,7 @@ describe "LifeTracker" {
         $Transactions = Get-LifeTracker
         $Transactions.ChronoToken| Should -Be 13
         $Transactions.TaskToken | Should -Be 23
-        $Transactions.WillpowerToken| Should -Be 7
+        $Transactions.WillpowerToken| Should -Be 12
     }
 
     it "Should rebuild the transaction table" {

@@ -197,7 +197,7 @@ function Complete-Tasklet {
     begin{}
     process{
         try{
-            $InputObject.MoveToCollection("tasklet_archive")
+            $InputObject.MoveCollection("tasklet","tasklet_archive")
             Write-Output "Tasklet [$($InputObject.title)] Completed"
         }
         catch {
@@ -220,7 +220,7 @@ function Remove-Tasklet {
     begin{}
     process{
         try{
-            $InputObject.RemoveFromCurrentCollection()
+            $InputObject.RemoveFromCurrentCollection("tasklet")
             Write-Output "Tasklet [$($InputObject.title)] Removed"
         }
         catch {
@@ -250,7 +250,7 @@ function Split-Tasklet {
                 New-Tasklet -Tags $InputObject.Tags -RelatedTo $InputObject.Title
             }
 
-            $InputObject.RemoveFromCurrentCollection()
+            $InputObject.RemoveFromCurrentCollection("tasklet")
             Write-Output "Tasklet [$($InputObject.title)] Split"
         }
         catch {

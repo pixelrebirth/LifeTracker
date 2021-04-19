@@ -14,9 +14,9 @@ class Base {
         Close-LiteDBConnection
     }
 
-    [void] RemoveFromCurrentCollection () {
+    [void] RemoveFromCurrentCollection ($Collection) {
         Open-LiteDBConnection $this.DbPath
-        Remove-LiteDbDocument -Collection "$($this.gettype().name)" -Id $($this._id.guid) | Out-Null
+        Remove-LiteDbDocument -Collection $Collection -Id $($this._id.guid) | Out-Null
         Close-LiteDBConnection
     }
 
@@ -28,9 +28,9 @@ class Base {
         Close-LiteDBConnection
     }
 
-    [void] MoveToCollection ($Collection) {
-        $this.AddToCollection($Collection)
-        $this.RemoveFromCurrentCollection()
+    [void] MoveCollection ($CurrentCollection,$DestinationCollection) {
+        $this.AddToCollection($DestinationCollection)
+        $this.RemoveFromCurrentCollection($CurrentCollection)
     }
 }
 

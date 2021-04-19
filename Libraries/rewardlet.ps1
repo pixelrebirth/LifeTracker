@@ -59,11 +59,69 @@ function Add-Rewardlet {
     end {
         try {
             $Transaction._id = (New-Guid).Guid
-            $Transaction.AddToCollection("rewardlet_transaction")
+            $Transaction.AddToCollection("rewardlet_awarded")
         }
         catch {
-            throw "Failed to update rewardlet_transaction"
+            throw "Failed to update rewardlet_awarded"
         }
+        
+        #### UPDATED TO COINS METHOD, ADD COINS AND STATISTICS BLOB ####
+        
+        # $Splat = @{
+        #     ChronoToken     = $(-$Transaction.TimeEstimate)
+        #     WillpowerToken  = $(-$Transaction.DopamineIndex)
+        #     TaskToken       = $(-$Transaction.TaskRequirement)
+        #     FunctionName    = $MyInvocation.MyCommand.Name
+        # }
+        # Add-LifeTrackerTransaction @Splat
+
+        Add-LifeTrackerTransaction -FunctionName $MyInvocation.MyCommand.Name
+        "Rewardlet [$($Transaction.title)] Award Won"
+    }
+}
+function Receive-Rewardlet {
+    [CmdletBinding()]
+    [Alias("ar")]
+    param (
+        
+    )
+    DynamicParam {
+        . $script:LifeTrackerModulePath/Libraries/general.ps1
+        [Scriptblock]$ConfigValues = {
+            Import-Module PSLiteDB | Out-Null
+            Open-LiteDBConnection $script:DatabaseLocation | Out-Null
+            (Find-LiteDBDocument -Collection "rewardlet_awarded").Title
+            Close-LiteDBConnection | Out-Null
+        }
+        return  Get-DynamicParam -Validate -ParamName Title -ParamCode  $ConfigValues
+    }
+    
+    begin {
+        $Title = $PsBoundParameters['Title']
+        
+        Import-Module PSLiteDB | Out-Null
+        Open-LiteDBConnection $script:DatabaseLocation | Out-Null
+    }
+    process {
+        $Reward = Find-LiteDBDocument -Collection "rewardlet_awarded" | Where title -eq $Title
+        Close-LiteDBConnection | Out-Null
+
+        if ($Reward.count -eq 1){
+            $Transaction = [rewardlet]::new($Reward)
+        }
+        else {
+            throw "Too many rewards with same title: $Title"
+        }
+
+        try {
+            $Transaction.MoveCollection("rewardlet_awarded","rewardlet_transaction")
+        }
+        catch {
+            throw "Failed to update rewardlet_awarded"
+        }
+    }
+    
+    end {
         $Splat = @{
             ChronoToken     = $(-$Transaction.TimeEstimate)
             WillpowerToken  = $(-$Transaction.DopamineIndex)
@@ -72,36 +130,15 @@ function Add-Rewardlet {
         }
         Add-LifeTrackerTransaction @Splat
 
-        "Rewardlet Registered as Taken"
+        "Rewardlet [$($Transaction.title)] Award Received"
     }
 }
-
-function Get-RewardletTransaction {
-    [CmdletBinding()]
-    param (
-        
-    )
-    
-    begin {
-        Import-Module PSLiteDB | Out-Null
-        Open-LiteDBConnection $script:DatabaseLocation | Out-Null
-    }
-    
-    process {
-        $Output = Find-LiteDBDocument -Collection "rewardlet_transaction"
-    }
-    
-    end {
-        Close-LiteDBConnection | Out-Null
-        $Output
-    }
-}
-
 function Get-Rewardlet {
     [cmdletbinding()]
     [Alias("gr")]
     param(
-        [switch]$FormatView
+        [switch]$FormatView,
+        [ValidateSet('awarded','transaction','new')]$Type
     )
     DynamicParam {
         . $script:LifeTrackerModulePath/Libraries/general.ps1
@@ -122,7 +159,11 @@ function Get-Rewardlet {
         Open-LiteDBConnection $script:DatabaseLocation | Out-Null
     }
     process {
-        $GetDocuments = Find-LiteDBDocument -Collection "rewardlet"
+        switch ($Type){
+            "transaction"       {$GetDocuments = Find-LiteDBDocument -Collection "rewardlet_transaction"}
+            "awarded"           {$GetDocuments = Find-LiteDBDocument -Collection "rewardlet_awarded"}
+            default             {$GetDocuments = Find-LiteDBDocument -Collection "rewardlet"}
+        }
         if ($Title){
             $GetDocuments = $GetDocuments |  where Title -Contain $Title
         }
@@ -142,7 +183,7 @@ function Get-Rewardlet {
             }
         }
         else {
-            "No Rewardlet Found"
+            "No Rewardlet Found" 
         }
     }
 }

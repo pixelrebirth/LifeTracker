@@ -123,6 +123,7 @@ function New-TaskletDatabase {
         "tasklet",
         "tasklet_archive",
         "rewardlet",
+        "rewardlet_awarded",
         "rewardlet_transaction",
         "journlet_transaction",
         "countlet_transaction",
@@ -130,7 +131,8 @@ function New-TaskletDatabase {
         "timelet_transaction",
         "habitlet",
         "habitlet_transaction",
-        "token_transaction"
+        "token_transaction",
+        "blobs"
     )
 
     foreach ($Item in $Collections){
@@ -274,8 +276,8 @@ function Start-LifeTrackerGui {
             Countlet  [$($StreakData.CountStreak)]:[$($StreakData.CountDots)]
             
             BossToken [$($StreakData.BossToken)]:[$($StreakData.BossDots)]
-            Experience    []
             Coins     [$Coins]
+            XP        []
         
             ----- [KEYBINDINGS] -----
 
@@ -310,7 +312,7 @@ function Start-LifeTrackerGui {
             $KeyPress = Get-KeyPress -Message "LifeTracker:>" -timeOutMilliSeconds 30000 -regexPattern $Regex
             Clear-Host
             Start-Sleep -Milliseconds 250
-            
+
             if ($KeyPress -match $Regex) {
                 $HostOutput = switch ($KeyPress){
                     "a" {New-Tasklet}
