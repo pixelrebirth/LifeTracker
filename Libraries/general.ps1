@@ -338,7 +338,9 @@ function Start-LifeTrackerGui {
                 }
                               
                 Write-Output $HostOutput
-                Read-Host "`nPress return to continue"
+                if ($Keypress -notmatch "g|r"){
+                    Read-Host "`nPress return to continue"
+                }
                 Continue
             }
             Start-Sleep -Milliseconds 250
