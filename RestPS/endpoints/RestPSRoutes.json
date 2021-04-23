@@ -6,6 +6,16 @@
   },
   {
     "RequestType": "GET",
+    "RequestURL": "/boxbreathe",
+    "RequestCommand": "Add-Countlet -Title Box-Breathe -Tags box-breathe,ifttt,lifetracker"
+  },
+  {
+    "RequestType": "GET",
+    "RequestURL": "/observation",
+    "RequestCommand": "Add-Countlet -Title Observation-Self -Tags observation-self,ifttt,lifetracker"
+  },
+  {
+    "RequestType": "GET",
     "RequestURL": "/status",
     "RequestCommand": "return 1"
   }

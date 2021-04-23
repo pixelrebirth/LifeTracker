@@ -346,3 +346,39 @@ reward types are stored in rewardlet collection
 rewards to take are in rewardlet_transaction
 once they have been taken, they move to rewardlet_archive
 
+Habit Hook Theory
+--
+Trigger > Action > Variable Reward > Investment
+
+Trigger - "The Itch"
+----
+External Triggers (external sense)
+    SMS messages for analytics
+    IFTTT push notifications
+    Windows Toast
+    Reminder Chimes
+    Time of Day
+    Hourly Rewards you can miss
+Internal Triggers (emotional corollary)
+    Guilt for missing tasks
+    Fear of losing information
+    Analytics/Metrics are awesome
+
+Action - "The Scratch"
+
+---
+Mottos
+
+A loss of self control is a loss of all control.
+If given a close choice between what is easy and what is hard, choose hard.
+Be a master of change.
+Eat bitter, drink bland.
+Five why's lead to emotional insight, use it often to change.
+Willpower is the ability to do what you need, not what you want.
+Design yourself, literally build a map of the perfect you.
+The mind uses belief to construct reality, i
+
+---
+Transitioners
+
+Moving from one state of emotion to another emotion, shifting task to task there is a transition, there may be universally usable transitions, like eating, drinking, bathroom, or association, like box-breathing, willpower.. almost like a transition let (use countlet?)
